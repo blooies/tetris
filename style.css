@@ -1,0 +1,29 @@
+.color1 {
+  background-color: #c98888;
+  border: 1px solid #a24949; }
+
+.color2 {
+  background-color: #8df6ff;
+  border: 1px solid #27eeff; }
+
+.color3 {
+  background-color: #9dff5c;
+  border: 1px solid #62f500; }
+
+.color4 {
+  background-color: #00d042;
+  border: 1px solid #006a22; }
+
+.color5 {
+  background-color: #5f7185;
+  border: 1px solid #353e4a; }
+
+.grid {
+  width: 250px;
+  height: 250px;
+  border: 1px solid #cccccc; }
+
+.cell {
+  border: 1px solid #0C7699; }
+
+/*# sourceMappingURL=style.css.map */
