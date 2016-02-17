@@ -30,6 +30,7 @@
 // 19
 
 Config = {
+    gridName: 'grid',
     size: {
         width: 10, //10 cells across
         height: 20 //20 cells down
@@ -40,6 +41,8 @@ Config = {
 var Grid = function() {
     this.width = Config.size.width;
     this.height = Config.size.height;
+    this.gridName = Config.gridName;
+    this.el = document.getElementById(this.gridName);
     this.cells = [];
     this.buildCells();
 }
@@ -53,9 +56,14 @@ Grid.prototype.buildCells = function() {
         for (var j=0; j<this.width; j++) {
             var x = j;
             var cell = new Cell(x, y);
+            this.appendCell(cell);
             this.cells.push(cell);
         }
     }
+}
+
+Grid.prototype.appendCell = function(cell) {
+    this.el.appendChild(cell.el);
 }
 
 var Cell = function(x, y) {
@@ -69,4 +77,5 @@ var Cell = function(x, y) {
 Cell.prototype.buildHtml = function() {
     var el = document.createElement("div");
     el.setAttribute("class", "cell");
+    this.el = el;
 }
