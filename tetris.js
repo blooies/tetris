@@ -14,7 +14,10 @@ Config = {
         width: 10, //10 cells across
         height: 20 //20 cells down
     },
-    cellDefaultColor: '#fff'
+    cellDefaultColor: '#fff',
+    colors: [
+        'color1', 'color2', 'color3', 'color4', 'color5'
+    ]
 }
 
 var Grid = function() {
@@ -22,7 +25,7 @@ var Grid = function() {
     this.height = Config.size.height;
     this.gridName = Config.gridName;
     this.el = document.getElementById(this.gridName);
-    this.cells = [];
+    this.cells = {};
     this.fallingPiece = null;
     this.buildCells();
     this.startGame();
@@ -35,7 +38,10 @@ Grid.prototype.buildCells = function() {
             var x = j;
             var cell = new Cell(x, y);
             this.appendCell(cell);
-            this.cells.push(cell);
+            if (!this.cells[x]) {
+                this.cells[x] = {};
+            }
+            this.cells[x][y] = cell;
         }
     }
 }
@@ -53,7 +59,12 @@ Grid.prototype.generatePiece = function() {
     this.fallingPiece = piece;
 }
 
+Grid.prototype.assignCellToPiece = function(piece) {
+
+}
+
 var Cell = function(x, y) {
+    this.coordinates = String(x) + String(y);
     this.x = x;
     this.y = y;
     this.color = Config.cellDefaultColor;
@@ -69,10 +80,13 @@ Cell.prototype.buildHtml = function() {
 
 var Piece = function() {
     this.shape = null;
+    this.currentCoordinates = null;
+    this.cells = [];
     this.generateRandomShape();
 }
 
 Piece.prototype  = {
+    colors: Config.colors,
     shapes: [
         //shape I
         //0 1 2 3 4 5 6 7 8 9
@@ -80,7 +94,7 @@ Piece.prototype  = {
         //2 . . . . # . . . .
         //3 . . . . # . . . .
         //4 . . . . # . . . .
-        shapeOne: [
+        shapeOne = [
             [5, 1],
             [5, 2],
             [5, 3],
@@ -90,11 +104,25 @@ Piece.prototype  = {
 }
 
 Piece.prototype.generateRandomShape = function() {
-    var randomNum = this.randomNumber(this.shapes.length);
+    var randomNum = this.generateRandomNumber(this.shapes.length);
     var randomShape = this.shapes[randomNum];
     this.shape = randomShape;
+    this.currentCoordinates = randomShape;
+    this.colorShape();
 }
 
-Piece.prototype.randomNumber = function(notIncluding) {
+Piece.prototype.generateRandomNumber = function(notIncluding) {
     return Math.floor(Math.random() * notIncluding);
+}
+
+Piece.prototype.colorShape = function() {
+    var randomNum = this.generateRandomNumber(this.colors.length);
+    var randomColor = this.colors[randomNum];
+    this.colorCell(this.currentCoordinates, randomColor);
+}
+
+
+
+Piece.prototype.colorCell = function(coordinates, color) {
+
 }
