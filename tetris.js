@@ -8,27 +8,6 @@
 // Piece knows what cells it is occupying
 // Grid holds cells
 
-// 0123456789
-// 1
-// 2
-// 3
-// 4
-// 5
-// 6
-// 7
-// 8
-// 9
-// 10
-// 11
-// 12
-// 13
-// 14
-// 15
-// 16
-// 17
-// 18
-// 19
-
 Config = {
     gridName: 'grid',
     size: {
@@ -44,10 +23,9 @@ var Grid = function() {
     this.gridName = Config.gridName;
     this.el = document.getElementById(this.gridName);
     this.cells = [];
+    this.fallingPiece = null;
     this.buildCells();
-}
-
-Grid.prototype.buildGrid = function() {
+    this.startGame();
 }
 
 Grid.prototype.buildCells = function() {
@@ -66,6 +44,15 @@ Grid.prototype.appendCell = function(cell) {
     this.el.appendChild(cell.el);
 }
 
+Grid.prototype.startGame = function() {
+    this.generatePiece();
+}
+
+Grid.prototype.generatePiece = function() {
+    var piece = new Piece();
+    this.fallingPiece = piece;
+}
+
 var Cell = function(x, y) {
     this.x = x;
     this.y = y;
@@ -76,6 +63,38 @@ var Cell = function(x, y) {
 
 Cell.prototype.buildHtml = function() {
     var el = document.createElement("div");
-    el.setAttribute("class", "cell");
+    el.setAttribute("class", "cell " + this.x + this.y);
     this.el = el;
+}
+
+var Piece = function() {
+    this.shape = null;
+    this.generateRandomShape();
+}
+
+Piece.prototype  = {
+    shapes: [
+        //shape I
+        //0 1 2 3 4 5 6 7 8 9
+        //1 . . . . # . . . .
+        //2 . . . . # . . . .
+        //3 . . . . # . . . .
+        //4 . . . . # . . . .
+        shapeOne: [
+            [5, 1],
+            [5, 2],
+            [5, 3],
+            [5, 4]
+        ]
+    ]
+}
+
+Piece.prototype.generateRandomShape = function() {
+    var randomNum = this.randomNumber(this.shapes.length);
+    var randomShape = this.shapes[randomNum];
+    this.shape = randomShape;
+}
+
+Piece.prototype.randomNumber = function(notIncluding) {
+    return Math.floor(Math.random() * notIncluding);
 }
