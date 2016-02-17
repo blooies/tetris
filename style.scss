@@ -1,0 +1,31 @@
+$cell-size: 25px;
+$grid-width: ($cell-size * 10);
+$grid-height: ($cell-size * 10);
+$grid-border: #cccccc;
+$cell-border: #0C7699;
+
+
+$colors: (
+    ('color1', #c98888),
+    ('color2', #8df6ff),
+    ('color3', #9dff5c),
+    ('color4', #00d042),
+    ('color5', #5f7185)
+);
+
+@each $color, $hex in $colors {
+    .#{$color} {
+        background-color: #{$hex};
+        border: 1px solid darken($hex, 20);
+    }
+}
+
+.grid {
+    width: $grid-width;
+    height: $grid-height;
+    border: 1px solid $grid-border;
+}
+
+.cell {
+    border: 1px solid $cell-border;
+}
