@@ -1,8 +1,8 @@
-$cell-size: 25px;
-$grid-width: ($cell-size * 10);
-$grid-height: ($cell-size * 10);
+$cell-size: 20px;
+$grid-width: ($cell-size * 10) + 20;
+$grid-height: ($cell-size * 20) + 40;
 $grid-border: #cccccc;
-$cell-border: #0C7699;
+$cell-border: #b1c2c6;
 
 
 $colors: (
@@ -20,7 +20,7 @@ $colors: (
     }
 }
 
-.grid {
+#grid {
     width: $grid-width;
     height: $grid-height;
     border: 1px solid $grid-border;
@@ -28,4 +28,7 @@ $colors: (
 
 .cell {
     border: 1px solid $cell-border;
+    float: left;
+    width: $cell-size;
+    height: $cell-size;
 }

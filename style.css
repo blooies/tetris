@@ -18,12 +18,15 @@
   background-color: #5f7185;
   border: 1px solid #353e4a; }
 
-.grid {
-  width: 250px;
-  height: 250px;
+#grid {
+  width: 220px;
+  height: 440px;
   border: 1px solid #cccccc; }
 
 .cell {
-  border: 1px solid #0C7699; }
+  border: 1px solid #b1c2c6;
+  float: left;
+  width: 20px;
+  height: 20px; }
 
 /*# sourceMappingURL=style.css.map */
