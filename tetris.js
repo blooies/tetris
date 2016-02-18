@@ -32,7 +32,8 @@ Config = {
             [5, 3],
             [5, 4]
         ]
-    ]
+    ],
+    interval: 1000
 }
 
 // TETRIS
@@ -52,6 +53,7 @@ Tetris.prototype.startGame = function() {
     this.grid.buildCells();
     var shape = this.generateRandomShape();
     var piece = this.generateRandomPiece(shape);
+    this.eventListener.startInterval(this.dropPieces);
 }
 
 Tetris.prototype.generateRandomShape = function() {
@@ -82,6 +84,9 @@ Tetris.prototype.getRandomColor = function() {
     return randomColor;
 }
 
+Tetris.prototype.dropPieces = function() {
+    this.fallingPiece.movePiece();
+}
 
 // GRID
 var Grid = function() {
@@ -144,6 +149,14 @@ Cell.prototype.fillColor = function(color) {
     this.el.setAttribute("class", "cell " + color);
 }
 
+Cell.prototype.changeCoordinates = function(direction) {
+    switch (direction) {
+        case 'down':
+
+            break;
+    }
+}
+
 // PIECE
 var Piece = function(shape) {
     this.shape = shape;
@@ -156,4 +169,21 @@ Piece.prototype.colorInCells = function(color) {
     this.cells.forEach(function(cell) {
         cell.fillColor(color);;
     })
+}
+
+Piece.prototype.movePiece = function(direction) {
+    this.cells.forEach(function(cell) {
+        cell.unmark();
+    })
+}
+
+// EVENT LISTENER
+var EventListener = function() {
+    this.interval = Config.interval
+}
+
+EventListener.prototype.startInterval = function(func) {
+    setInterval(function() {
+        func();
+    }, this.interval);
 }
