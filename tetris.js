@@ -53,7 +53,7 @@ Tetris.prototype.startGame = function() {
     this.grid.buildCells();
     var shape = this.generateRandomShape();
     var piece = this.generateRandomPiece(shape);
-    this.eventListener.startInterval(this.dropPieces);
+    this.dropPieces();
 }
 
 Tetris.prototype.generateRandomShape = function() {
@@ -84,9 +84,50 @@ Tetris.prototype.getRandomColor = function() {
     return randomColor;
 }
 
-Tetris.prototype.dropPieces = function() {
-    this.fallingPiece.movePiece();
+
+Tetris.prototype.movePiece = function(piece, direction) {
+    var cells = piece.cells;
+    console.log('move piece')
+    console.log(piece)
+    for (var i=0; i<cells.length; i++) {
+        var currentCoordinates = cells[i].coordinates;
+        var newCoords = this.getNewCoordinates(currentCoordinates, direction);
+        var newCell = this.grid.findCells(newCoords);
+        //replace the piece with the new cells;
+        cells[i].unMarkColor();
+        console.log(cells[i])
+        // cells[i] = newCell;
+        console.log(newCell)
+    }
 }
+
+Tetris.prototype.dropPieces = function() {
+    var self = this;
+    f = setInterval(function() {
+        self.movePiece(self.fallingPiece, 'down');
+    }, 1000)
+
+    setTimeout(function() {
+        console.log("CLEAR INTERVAL")
+        clearInterval(f);
+    }, 5000)
+}
+
+Tetris.prototype.getNewCoordinates = function(coords, direction) {
+    var x = coords[0];
+    var y = coords[1];
+
+    switch (direction) {
+        case 'down':
+            y = y + 1;
+            break;
+        case 'left':
+        case 'right':
+    }
+
+    return [x, y];
+}
+
 
 // GRID
 var Grid = function() {
@@ -129,6 +170,13 @@ Grid.prototype.assignCellsToPiece = function(piece) {
     console.log(piece);
 }
 
+Grid.prototype.findCells = function(coordinates) {
+    var x = coordinates[0];
+    var y = coordinates[1];
+    var cell = this.cells[x][y];
+    return cell;
+}
+
 // CELL
 var Cell = function(x, y) {
     this.coordinates = String(x) + String(y);
@@ -136,7 +184,9 @@ var Cell = function(x, y) {
     this.y = y;
     this.color = Config.cellDefaultColor;
     this.el = null;
+    this.coordinates = [x, y];
     this.buildHtml();
+    this.color = null;
 }
 
 Cell.prototype.buildHtml = function() {
@@ -146,7 +196,13 @@ Cell.prototype.buildHtml = function() {
 }
 
 Cell.prototype.fillColor = function(color) {
+    this.color = color;
+    if (!color) { color = this.color;}
     this.el.setAttribute("class", "cell " + color);
+}
+
+Cell.prototype.unMarkColor = function() {
+    this.el.setAttribute("class", "cell");
 }
 
 Cell.prototype.changeCoordinates = function(direction) {
@@ -168,12 +224,6 @@ var Piece = function(shape) {
 Piece.prototype.colorInCells = function(color) {
     this.cells.forEach(function(cell) {
         cell.fillColor(color);;
-    })
-}
-
-Piece.prototype.movePiece = function(direction) {
-    this.cells.forEach(function(cell) {
-        cell.unmark();
     })
 }
 
