@@ -40,7 +40,7 @@ Config = {
 var Tetris = function() {
     this.fallingPiece = null;
     this.grid = new Grid();
-    this.eventListener = new EventListener();
+    this.eventListener = new EventListener(this);
     this.startGame();
 }
 
@@ -53,7 +53,7 @@ Tetris.prototype.startGame = function() {
     this.grid.buildCells();
     var shape = this.generateRandomShape();
     var piece = this.generateRandomPiece(shape);
-    this.eventListener.startInterval(this.dropPieces);
+    this.eventListener.startTimer();
 }
 
 Tetris.prototype.generateRandomShape = function() {
@@ -69,13 +69,17 @@ Tetris.prototype.generateRandomNumber = function(notIncluding) {
 Tetris.prototype.generateRandomPiece = function(shape) {
     var piece = new Piece(shape);
     this.fallingPiece = piece;
-    this.getCellsForPiece(piece);
+    this.assignCellsToPiece(piece);
     var color = this.getRandomColor();
     piece.colorInCells(color);
 }
 
-Tetris.prototype.getCellsForPiece = function(piece) {
-    this.grid.assignCellsToPiece(piece);
+Tetris.prototype.assignCellsToPiece = function(piece) {
+    var coords = piece.shape;
+    for (var i=0; i<coords.length; i++) {
+        var cell = this.grid.assignCells(coords[i]);
+        piece.cells.push(cell);
+    }
 }
 
 Tetris.prototype.getRandomColor = function() {
@@ -84,9 +88,37 @@ Tetris.prototype.getRandomColor = function() {
     return randomColor;
 }
 
-Tetris.prototype.dropPieces = function() {
-    this.fallingPiece.movePiece();
+Tetris.prototype.changeCoordinates = function(cells, coords, direction) {
+    for (var i=0; i<coords.length; i++) {
+        var x = coords[i][0],
+            y = coords[i][1];
+
+        switch (direction) {
+            case 'down':
+                y = y + 1;
+                break;
+            case 'left':
+                x = x + 1;
+                break;
+            case 'right':
+                x = x - 1;
+                break;
+        }
+
+        coords[i] = [x, y];
+        cells[i] = this.grid.assignCells(coords[i]);
+    }
 }
+
+Tetris.prototype.movePiece = function(piece, direction) {
+    var cells = piece.cells;
+    for (var i=0; i<cells.length; i++) {
+        cells[i].unMark();
+    }
+    this.changeCoordinates(cells, piece.currentCoordinates, direction);
+    piece.colorInCells();
+}
+
 
 // GRID
 var Grid = function() {
@@ -116,18 +148,13 @@ Grid.prototype.appendCell = function(cell) {
     this.el.appendChild(cell.el);
 }
 
-Grid.prototype.assignCellsToPiece = function(piece) {
-    var cells = [];
-    var shape = piece.shape;
-    for (var i=0; i<shape.length; i++) {
-        var x = shape[i][0];
-        var y = shape[i][1];
-        var cell = this.cells[x][y];
-        cells.push(cell);
-    }
-    piece.cells = cells;
-    console.log(piece);
+Grid.prototype.assignCells = function(coordinate) {
+    var x = coordinate[0];
+    var y = coordinate[1];
+    var cell = this.cells[x][y]
+    return cell;
 }
+
 
 // CELL
 var Cell = function(x, y) {
@@ -149,41 +176,72 @@ Cell.prototype.fillColor = function(color) {
     this.el.setAttribute("class", "cell " + color);
 }
 
-Cell.prototype.changeCoordinates = function(direction) {
-    switch (direction) {
-        case 'down':
-
-            break;
-    }
+Cell.prototype.unMark = function() {
+    this.el.setAttribute("class", "cell");
 }
+
 
 // PIECE
 var Piece = function(shape) {
     this.shape = shape;
-    this.currentCoordinates = null;
+    this.currentCoordinates = shape;
     this.cells = [];
     this.color = null;
 }
 
 Piece.prototype.colorInCells = function(color) {
+    if (color) this.color = color;
+    if (!color && this.color) color = this.color;
     this.cells.forEach(function(cell) {
-        cell.fillColor(color);;
+        cell.fillColor(color);
     })
 }
 
-Piece.prototype.movePiece = function(direction) {
-    this.cells.forEach(function(cell) {
-        cell.unmark();
-    })
-}
 
 // EVENT LISTENER
-var EventListener = function() {
-    this.interval = Config.interval
+var EventListener = function(tetris) {
+    this.tetris = tetris;
+    this.interval = Config.interval;
+    this.initializeListener();
 }
 
-EventListener.prototype.startInterval = function(func) {
-    setInterval(function() {
-        func();
-    }, this.interval);
+EventListener.prototype.initializeListener = function() {
+    window.addEventListener('keydown', this.listenForKeyPresses.bind(this));
 }
+
+EventListener.prototype.startTimer = function() {
+    timer = setInterval(this.trigger.bind(this), this.interval);
+}
+
+EventListener.prototype.trigger = function() {
+    var piece = this.tetris.fallingPiece;
+    this.tetris.movePiece(piece, 'down');
+}
+
+EventListener.prototype.listenForKeyPresses = function(event) {
+    var piece = this.tetris.fallingPiece;
+    switch (event.keyCode) {
+        case 37: //left
+            this.tetris.movePiece(piece, 'right');
+            break;
+        case 39: //right
+            console.log('39');
+            this.tetris.movePiece(piece, 'left');
+            break;
+        case 40: //down
+            console.log('40')
+            this.tetris.movePiece(piece, 'down');
+            break;
+        case 32: //space to rotate
+            console.log('32');
+            break;
+        case 13: //enter for pause
+            clearInterval(timer);
+            break;
+    }
+}
+
+
+//when the pieces are falling down,
+// the cells do not change. the cells are like coordinates.
+// BUT the cells in the piece() change and then they redraw themselves
