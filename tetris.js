@@ -78,7 +78,7 @@ Tetris.prototype.assignCellsToPiece = function(piece) {
     var coords = piece.shape;
     for (var i=0; i<coords.length; i++) {
         var cell = this.grid.assignCells(coords[i]);
-        piece.cells.push(cell);
+        piece.cells.unshift(cell);
     }
 }
 
@@ -89,6 +89,11 @@ Tetris.prototype.getRandomColor = function() {
 }
 
 Tetris.prototype.changeCoordinates = function(cells, coords, direction) {
+    var boundaries = {
+        x: Config.size.width - 1,
+        y: Config.size.height - 1
+    }
+
     for (var i=0; i<coords.length; i++) {
         var x = coords[i][0],
             y = coords[i][1];
@@ -103,6 +108,19 @@ Tetris.prototype.changeCoordinates = function(cells, coords, direction) {
             case 'right':
                 x = x - 1;
                 break;
+        }
+
+        if (x < 0) {
+            console.log(x)
+            x = x + 1;
+        } else if (x > boundaries.x) {
+            console.log(x)
+            x = x - 1;
+        }
+
+        if (y > boundaries.y) {
+            console.log('reached bottom')
+            y = y - 1;
         }
 
         coords[i] = [x, y];
