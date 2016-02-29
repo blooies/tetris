@@ -154,11 +154,13 @@ Tetris.prototype.getRandomColor = function() {
     return randomColor;
 }
 
-Tetris.prototype.changeCoordinates = function(cells, coords, direction) {
+Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
     var boundaries = {
         x: Config.size.width - 1,
         y: Config.size.height - 1
     }
+
+    var coords = piece.currentCoordinates;
 
     for (var i=0; i<coords.length; i++) {
         var x = coords[i][0],
@@ -174,6 +176,10 @@ Tetris.prototype.changeCoordinates = function(cells, coords, direction) {
             case 'right':
                 x = x - 1;
                 break;
+            case 'rotate':
+                piece.changeOrientation();
+                break;
+
         }
 
         if (x < 0) {
@@ -199,7 +205,7 @@ Tetris.prototype.movePiece = function(piece, direction) {
     for (var i=0; i<cells.length; i++) {
         cells[i].unMark();
     }
-    this.changeCoordinates(cells, piece.currentCoordinates, direction);
+    this.changeCoordinates(cells, piece, direction);
     piece.colorInCells();
 }
 
@@ -267,7 +273,9 @@ Cell.prototype.unMark = function() {
 
 // PIECE
 var Piece = function(shape) {
-    this.shape = shape;
+    this.orientations = shape;
+    this.shape = shape[0];
+    this.currentOrientation = 0;
     this.currentCoordinates = shape;
     this.cells = [];
     this.color = null;
@@ -281,6 +289,12 @@ Piece.prototype.colorInCells = function(color) {
     })
 }
 
+Piece.prototype.changeOrientation = function() {
+    if (this.currentOrientation < this.orientations.length) {
+        this.currentOrientation += 1;
+        this.shape = this.orientations[this.currentOrientation];
+    }
+}
 
 // EVENT LISTENER
 var EventListener = function(tetris) {
@@ -318,6 +332,7 @@ EventListener.prototype.listenForKeyPresses = function(event) {
             break;
         case 32: //space to rotate
             console.log('32');
+            this.tetris.movePiece(piece, 'rotate');
             break;
         case 13: //enter for pause
             clearInterval(timer);
