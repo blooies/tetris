@@ -123,17 +123,18 @@ Tetris.prototype.startGame = function() {
 }
 
 Tetris.prototype.generateRandomShape = function() {
-    var randomNum = this.generateRandomNumber(this.shapes.length);
+    var randomNum = this.getRandomNumber(this.shapes.length);
     var randomShape = this.shapes[randomNum];
     return randomShape;
 }
 
-Tetris.prototype.generateRandomNumber = function(notIncluding) {
+Tetris.prototype.getRandomNumber = function(notIncluding) {
     return Math.floor(Math.random() * notIncluding);
 }
 
 Tetris.prototype.generateRandomPiece = function(shape) {
-    var piece = new Piece(shape);
+    var randomOrientation = this.getRandomNumber(shape.length);
+    var piece = new Piece(shape, randomOrientation);
     this.fallingPiece = piece;
     this.assignCellsToPiece(piece);
     var color = this.getRandomColor();
@@ -141,7 +142,7 @@ Tetris.prototype.generateRandomPiece = function(shape) {
 }
 
 Tetris.prototype.assignCellsToPiece = function(piece) {
-    var coords = piece.shape;
+    var coords = piece.currentCoordinates;
     for (var i=0; i<coords.length; i++) {
         var cell = this.grid.assignCells(coords[i]);
         piece.cells.unshift(cell);
@@ -149,7 +150,7 @@ Tetris.prototype.assignCellsToPiece = function(piece) {
 }
 
 Tetris.prototype.getRandomColor = function() {
-    var randomNum = this.generateRandomNumber(this.colors.length);
+    var randomNum = this.getRandomNumber(this.colors.length);
     var randomColor = this.colors[randomNum];
     return randomColor;
 }
@@ -272,11 +273,10 @@ Cell.prototype.unMark = function() {
 
 
 // PIECE
-var Piece = function(shape) {
+var Piece = function(shape, orientation) {
     this.orientations = shape;
-    this.shape = shape[0];
-    this.currentOrientation = 0;
-    this.currentCoordinates = shape;
+    this.currentOrientation = orientation;
+    this.currentCoordinates = shape[orientation];
     this.cells = [];
     this.color = null;
 }
@@ -292,7 +292,7 @@ Piece.prototype.colorInCells = function(color) {
 Piece.prototype.changeOrientation = function() {
     if (this.currentOrientation < this.orientations.length) {
         this.currentOrientation += 1;
-        this.shape = this.orientations[this.currentOrientation];
+        this.currentCoordinates = this.orientations[this.currentOrientation];
     }
 }
 
