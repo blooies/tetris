@@ -163,41 +163,31 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
 
     var coords = piece.currentCoordinates;
 
-    for (var i=0; i<coords.length; i++) {
-        var x = coords[i][0],
-            y = coords[i][1];
+    if (piece.allowedMoves[direction]) {
+        for (var i=0; i<coords.length; i++) {
+            var x = coords[i][0],
+                y = coords[i][1];
 
-        switch (direction) {
-            case 'down':
-                y = y + 1;
-                break;
-            case 'left':
-                x = x + 1;
-                break;
-            case 'right':
-                x = x - 1;
-                break;
-            case 'rotate':
-                piece.changeOrientation();
-                break;
+            switch (direction) {
+                case 'down':
+                    y = y + 1;
+                    break;
+                case 'left':
+                    x = x + 1;
+                    break;
+                case 'right':
+                    x = x - 1;
+                    break;
+                case 'rotate':
+                    piece.changeOrientation();
+                    break;
+            }
 
+            coords[i] = [x, y];
+            cells[i] = this.grid.assignCells(coords[i]);
+
+            piece.setAllowedMoves();
         }
-
-        if (x < 0) {
-            console.log(x)
-            x = x + 1;
-        } else if (x > boundaries.x) {
-            console.log(x)
-            x = x - 1;
-        }
-
-        if (y > boundaries.y) {
-            console.log('reached bottom')
-            y = y - 1;
-        }
-
-        coords[i] = [x, y];
-        cells[i] = this.grid.assignCells(coords[i]);
     }
 }
 
@@ -279,6 +269,15 @@ var Piece = function(shape, orientation) {
     this.currentCoordinates = shape[orientation];
     this.cells = [];
     this.color = null;
+    this.resetMoves();
+}
+
+Piece.prototype.resetMoves = function() {
+    this.allowedMoves = {
+        'right': true,
+        'left': true,
+        'down': true
+    }
 }
 
 Piece.prototype.colorInCells = function(color) {
@@ -295,6 +294,30 @@ Piece.prototype.changeOrientation = function() {
         this.currentCoordinates = this.orientations[this.currentOrientation];
     }
 }
+
+Piece.prototype.setAllowedMoves = function() {
+    console.log('set allowed moves');
+    this.currentCoordinates.forEach(function(coordinate) {
+        var x = coordinate[0];
+        var y = coordinate[1];
+
+        if (x - 1 < 0) {
+            this.allowedMoves.left = false;
+            console.log("SETTING LEFT FALSE")
+        }
+
+        if (x + 1 >= Config.size.width) {
+            this.allowedMoves.right = false;
+            console.log("SETTING RIGHT FALSE")
+        }
+
+        if (y + 1 >= Config.size.height) {
+            this.allowedMoves.down = false;
+            console.log("SETTING DOWN FALSE");
+        }
+    })
+}
+
 
 // EVENT LISTENER
 var EventListener = function(tetris) {
