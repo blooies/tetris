@@ -162,7 +162,7 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
     }
 
     var coords = piece.currentCoordinates;
-
+    console.log(piece.allowedMoves)
     if (piece.allowedMoves[direction]) {
         for (var i=0; i<coords.length; i++) {
             var x = coords[i][0],
@@ -173,10 +173,10 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
                     y = y + 1;
                     break;
                 case 'left':
-                    x = x + 1;
+                    x = x - 1;
                     break;
                 case 'right':
-                    x = x - 1;
+                    x = x + 1;
                     break;
                 case 'rotate':
                     piece.changeOrientation();
@@ -188,6 +188,8 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
 
             piece.setAllowedMoves();
         }
+    } else {
+        console.log("BLAH")
     }
 }
 
@@ -296,24 +298,27 @@ Piece.prototype.changeOrientation = function() {
 }
 
 Piece.prototype.setAllowedMoves = function() {
+    this.resetMoves();
     console.log('set allowed moves');
+    var self = this;
     this.currentCoordinates.forEach(function(coordinate) {
         var x = coordinate[0];
         var y = coordinate[1];
-
         if (x - 1 < 0) {
-            this.allowedMoves.left = false;
+            self.allowedMoves.left = false;
             console.log("SETTING LEFT FALSE")
         }
 
         if (x + 1 >= Config.size.width) {
-            this.allowedMoves.right = false;
+            self.allowedMoves.right = false;
             console.log("SETTING RIGHT FALSE")
         }
 
         if (y + 1 >= Config.size.height) {
-            this.allowedMoves.down = false;
-            console.log("SETTING DOWN FALSE");
+            self.allowedMoves.down = false;
+            self.allowedMoves.right = false;
+            self.allowedMoves.left = false;
+            self.fallen = true;
         }
     })
 }
@@ -343,11 +348,11 @@ EventListener.prototype.listenForKeyPresses = function(event) {
     var piece = this.tetris.fallingPiece;
     switch (event.keyCode) {
         case 37: //left
-            this.tetris.movePiece(piece, 'right');
+            this.tetris.movePiece(piece, 'left');
             break;
         case 39: //right
             console.log('39');
-            this.tetris.movePiece(piece, 'left');
+            this.tetris.movePiece(piece, 'right');
             break;
         case 40: //down
             console.log('40')
