@@ -136,7 +136,15 @@ Tetris.prototype.generateRandomPiece = function(shape) {
     var randomOrientation = this.getRandomNumber(shape.length);
     var piece = new Piece(shape, randomOrientation);
     this.fallingPiece = piece;
+    console.log("NEW PIECE", piece)
+
     this.assignCellsToPiece(piece);
+    piece.cells.forEach(function(cell) {
+        if (cell == undefined) {
+            console.log("STOP")
+            debugger;
+        }
+    })
     var color = this.getRandomColor();
     piece.colorInCells(color);
 }
@@ -162,7 +170,7 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
     }
 
     var coords = piece.currentCoordinates;
-    if (piece.allowedMoves[direction]) {
+    if (piece.checkMoves(direction)) {
         for (var i=0; i<coords.length; i++) {
             var x = coords[i][0],
                 y = coords[i][1];
@@ -184,11 +192,7 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
 
             coords[i] = [x, y];
             cells[i] = this.grid.assignCells(coords[i]);
-
-            piece.setAllowedMoves();
         }
-    } else {
-        console.log("BLAH")
     }
 }
 
@@ -197,8 +201,10 @@ Tetris.prototype.dropNewPiece = function() {
     this.generateRandomPiece(shape);
 }
 
+
 Tetris.prototype.movePiece = function(piece, direction) {
     if (piece.fallen) {
+        this.fallingPiece = null;
         this.dropNewPiece();
     } else {
         var cells = piece.cells;
@@ -210,6 +216,38 @@ Tetris.prototype.movePiece = function(piece, direction) {
     }
 }
 
+// Tetris.prototype.setAllowedMoves = function(piece) {
+//     var self = this;
+//     piece.resetMoves();
+//     piece.currentCoordinates.forEach(function(coordinate) {
+//         var x = coordinate[0];
+//         var y = coordinate[1];
+//         var xLeftCoordinate = x - 1;
+//         var xRightCoordinate = x + 1;
+//         var yDownCoordinate = y + 1;
+//         // var xLeftCell = self.grid.assignCells([xLeftCoordinate, y]);
+//         // var xRightCell = self.grid.assignCells([xRightCoordinate, y]);
+//         // var yDownCell = self.grid.assignCells([x, yDownCoordinate]);
+//         // console.log(xLeftCell, xRightCell, yDownCell)
+
+//         if (xLeftCoordinate < 0) {
+//             piece.allowedMoves.left = false;
+//             console.log("SETTING LEFT FALSE")
+//         }
+
+//         if (xRightCoordinate >= Config.size.width) {
+//             piece.allowedMoves.right = false;
+//             console.log("SETTING RIGHT FALSE")
+//         }
+
+//         if (yDownCoordinate >= Config.size.height) {
+//             piece.allowedMoves.down = false;
+//             piece.allowedMoves.right = false;
+//             piece.allowedMoves.left = false;
+//             piece.fallen = true;
+//         }
+//     })
+// }
 
 // GRID
 var Grid = function() {
@@ -290,6 +328,40 @@ Piece.prototype.resetMoves = function() {
     }
 }
 
+Piece.prototype.checkMoves = function(direction) {
+    this.resetMoves();
+    for (var i=0; i<this.currentCoordinates.length; i++) {
+        var currentCoordinate = this.currentCoordinates[i];
+        var xLeft = currentCoordinate[0] - 1;
+        var xRight = currentCoordinate[0] + 1;
+        var yDown = currentCoordinate[1] + 1;
+
+        if (direction == 'down') {
+            if (yDown >= Config.size.height) {
+                this.allowedMoves.down = false;
+                this.allowedMoves.left = false;
+                this.allowedMoves.right = false;
+                this.fallen = true;
+            }
+        }
+
+        if (direction == 'left') {
+            if (xLeft < 0) {
+                this.allowedMoves.left = false;
+            }
+        }
+
+        if (direction == 'right') {
+            if (xRight >= Config.size.width) {
+                this.allowedMoves.right = false;
+            }
+        }
+    }
+
+    console.log(this.allowedMoves)
+    return this.allowedMoves[direction];
+}
+
 Piece.prototype.colorInCells = function(color) {
     if (color) this.color = color;
     if (!color && this.color) color = this.color;
@@ -305,30 +377,34 @@ Piece.prototype.changeOrientation = function() {
     }
 }
 
-Piece.prototype.setAllowedMoves = function() {
-    this.resetMoves();
-    var self = this;
-    this.currentCoordinates.forEach(function(coordinate) {
-        var x = coordinate[0];
-        var y = coordinate[1];
-        if (x - 1 < 0) {
-            self.allowedMoves.left = false;
-            console.log("SETTING LEFT FALSE")
-        }
+// Piece.prototype.setAllowedMoves = function() {
+//     this.resetMoves();
+//     var self = this;
+//     this.currentCoordinates.forEach(function(coordinate) {
+//         var x = coordinate[0];
+//         var y = coordinate[1];
+//         var xLeftCoordinate = x - 1;
+//         var xRightCoordinate = x + 1;
+//         var yDownCoordinate = y + 1;
 
-        if (x + 1 >= Config.size.width) {
-            self.allowedMoves.right = false;
-            console.log("SETTING RIGHT FALSE")
-        }
+//         if (x - 1 < 0) {
+//             self.allowedMoves.left = false;
+//             console.log("SETTING LEFT FALSE")
+//         }
 
-        if (y + 1 >= Config.size.height) {
-            self.allowedMoves.down = false;
-            self.allowedMoves.right = false;
-            self.allowedMoves.left = false;
-            self.fallen = true;
-        }
-    })
-}
+//         if (x + 1 >= Config.size.width) {
+//             self.allowedMoves.right = false;
+//             console.log("SETTING RIGHT FALSE")
+//         }
+
+//         if (y + 1 >= Config.size.height) {
+//             self.allowedMoves.down = false;
+//             self.allowedMoves.right = false;
+//             self.allowedMoves.left = false;
+//             self.fallen = true;
+//         }
+//     })
+// }
 
 
 // EVENT LISTENER
