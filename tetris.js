@@ -425,6 +425,7 @@ Tetris.prototype.movePiece = function(piece, direction) {
     console.log(piece)
     console.log(piece.fallen)
     if (piece.fallen) {
+        this.markCellsAsFilled(piece);
         this.fallingPiece = null;
         this.dropNewPiece();
     } else {
@@ -434,6 +435,13 @@ Tetris.prototype.movePiece = function(piece, direction) {
         }
         this.changeCoordinates(cells, piece, direction);
         piece.colorInCells();
+    }
+}
+
+Tetris.prototype.markCellsAsFilled = function(piece) {
+    for (var i=0; i<piece.cells.length; i++) {
+        var cell = piece.cells[i];
+        this.grid.markCells(cell);
     }
 }
 
@@ -498,13 +506,16 @@ Grid.prototype.appendCell = function(cell) {
     this.el.appendChild(cell.el);
 }
 
-Grid.prototype.assignCells = function(coordinate) {
-    var x = coordinate[0];
-    var y = coordinate[1];
+Grid.prototype.assignCells = function(coordinates) {
+    var x = coordinates[0];
+    var y = coordinates[1];
     var cell = this.cells[x][y]
     return cell;
 }
 
+Grid.prototype.markCells = function(cell) {
+    cell.mark();
+}
 
 // CELL
 var Cell = function(x, y) {
@@ -528,6 +539,10 @@ Cell.prototype.fillColor = function(color) {
 
 Cell.prototype.unMark = function() {
     this.el.setAttribute("class", "cell");
+}
+
+Cell.prototype.mark = function() {
+    this.mark = true;
 }
 
 
@@ -600,6 +615,12 @@ Piece.prototype.changeOrientation = function() {
     } else if (this.currentOrientation == this.orientations.length -1) {
         this.currentOrientation = 0;
     }
+
+    var currentCoords = this.currentCoordinates;
+    var x = currentCoords[0];
+    var y = currentCoords[1];
+
+
 }
 
 // Piece.prototype.setAllowedMoves = function() {
