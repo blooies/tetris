@@ -203,6 +203,8 @@ Tetris.prototype.dropNewPiece = function() {
 
 
 Tetris.prototype.movePiece = function(piece, direction) {
+    console.log(piece)
+    console.log(piece.fallen)
     if (piece.fallen) {
         this.fallingPiece = null;
         this.dropNewPiece();
@@ -341,6 +343,8 @@ Piece.prototype.checkMoves = function(direction) {
                 this.allowedMoves.down = false;
                 this.allowedMoves.left = false;
                 this.allowedMoves.right = false;
+                console.log('setting piece.fallen as TRUE')
+                console.log(this)
                 this.fallen = true;
             }
         }
@@ -374,6 +378,8 @@ Piece.prototype.changeOrientation = function() {
     if (this.currentOrientation < this.orientations.length) {
         this.currentOrientation += 1;
         this.currentCoordinates = this.orientations[this.currentOrientation];
+    } else if (this.currentOrientation == this.orientations.length -1) {
+        this.currentOrientation = 0;
     }
 }
 
