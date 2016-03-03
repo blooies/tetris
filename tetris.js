@@ -19,7 +19,7 @@ Config = {
     colors: [
         'color1', 'color2', 'color3', 'color4', 'color5'
     ],
-    shapes:[
+    shapes: [
         //shape I
         //0 1 2 3 4 5 6 7 8 9
         //1 . . . . X . . . .
@@ -370,7 +370,7 @@ Tetris.prototype.generateRandomPiece = function(shape) {
 
 Tetris.prototype.assignCellsToPiece = function(piece) {
     var coords = piece.currentCoordinates;
-    for (var i=0; i<coords.length; i++) {
+    for (var i = 0; i < coords.length; i++) {
         var cell = this.grid.assignCells(coords[i]);
         piece.cells.unshift(cell);
     }
@@ -389,8 +389,9 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
     }
 
     var coords = piece.currentCoordinates;
-    if (piece.checkMoves(direction)) {
-        for (var i=0; i<coords.length; i++) {
+    piece.resetMoves();
+    if (this.grid.checkMoves(piece, direction)) {
+        for (var i = 0; i < coords.length; i++) {
             var x = coords[i][0],
                 y = coords[i][1];
 
@@ -430,7 +431,7 @@ Tetris.prototype.movePiece = function(piece, direction) {
         this.dropNewPiece();
     } else {
         var cells = piece.cells;
-        for (var i=0; i<cells.length; i++) {
+        for (var i = 0; i < cells.length; i++) {
             cells[i].unMark();
         }
         this.changeCoordinates(cells, piece, direction);
@@ -441,6 +442,7 @@ Tetris.prototype.movePiece = function(piece, direction) {
 Tetris.prototype.markCellsAsFilled = function(piece) {
     for (var i=0; i<piece.cells.length; i++) {
         var cell = piece.cells[i];
+        console.log(cell);
         this.grid.markCells(cell);
     }
 }
@@ -509,7 +511,7 @@ Grid.prototype.appendCell = function(cell) {
 Grid.prototype.assignCells = function(coordinates) {
     var x = coordinates[0];
     var y = coordinates[1];
-    var cell = this.cells[x][y]
+    var cell = this.cells[x][y];
     return cell;
 }
 
@@ -517,7 +519,47 @@ Grid.prototype.markCells = function(cell) {
     cell.mark();
 }
 
-// CELL
+Grid.prototype.checkMoves = function(piece, direction) {
+    for (var i=0; i<piece.currentCoordinates.length; i++) {
+        var currentCoordinate = piece.currentCoordinates[i];
+        var originalX = currentCoordinate[0];
+        var originalY = currentCoordinate[1];
+        var xLeft = originalX - 1;
+        var xRight = originalX + 1;
+        var yDown = originalY + 1;
+        var xLeftCell = this.assignCells([xLeft, originalY]);
+        var xRightCell = this.assignCells([xRight, originalY]);
+        var yDownCell = this.assignCells([originalX, yDown]);
+
+        if (direction == 'down') {
+            console.log("******", yDownCell)
+            if (yDown >= Config.size.height || yDownCell.marked) {
+                piece.allowedMoves.down = false;
+                piece.allowedMoves.left = false;
+                piece.allowedMoves.right = false;
+                console.log('setting piece.fallen as TRUE')
+                console.log(piece)
+                piece.fallen = true;
+            }
+        }
+
+        if (direction == 'left') {
+            if (xLeft < 0 || xLeftCell.marked) {
+                piece.allowedMoves.left = false;
+            }
+        }
+
+        if (direction == 'right') {
+            if (xRight >= Config.size.width || xRightCell.marked) {
+                piece.allowedMoves.right = false;
+            }
+        }
+    }
+
+    console.log(piece.allowedMoves)
+    return piece.allowedMoves[direction];
+}
+
 var Cell = function(x, y) {
     this.coordinates = String(x) + String(y);
     this.x = x;
@@ -612,7 +654,7 @@ Piece.prototype.changeOrientation = function() {
     if (this.currentOrientation < this.orientations.length) {
         this.currentOrientation += 1;
         this.currentCoordinates = this.orientations[this.currentOrientation];
-    } else if (this.currentOrientation == this.orientations.length -1) {
+    } else if (this.currentOrientation == this.orientations.length - 1) {
         this.currentOrientation = 0;
     }
 
