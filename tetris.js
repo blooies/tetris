@@ -162,7 +162,6 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
     }
 
     var coords = piece.currentCoordinates;
-    console.log(piece.allowedMoves)
     if (piece.allowedMoves[direction]) {
         for (var i=0; i<coords.length; i++) {
             var x = coords[i][0],
@@ -193,13 +192,22 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
     }
 }
 
+Tetris.prototype.dropNewPiece = function() {
+    var shape = this.generateRandomShape();
+    this.generateRandomPiece(shape);
+}
+
 Tetris.prototype.movePiece = function(piece, direction) {
-    var cells = piece.cells;
-    for (var i=0; i<cells.length; i++) {
-        cells[i].unMark();
+    if (piece.fallen) {
+        this.dropNewPiece();
+    } else {
+        var cells = piece.cells;
+        for (var i=0; i<cells.length; i++) {
+            cells[i].unMark();
+        }
+        this.changeCoordinates(cells, piece, direction);
+        piece.colorInCells();
     }
-    this.changeCoordinates(cells, piece, direction);
-    piece.colorInCells();
 }
 
 
@@ -299,7 +307,6 @@ Piece.prototype.changeOrientation = function() {
 
 Piece.prototype.setAllowedMoves = function() {
     this.resetMoves();
-    console.log('set allowed moves');
     var self = this;
     this.currentCoordinates.forEach(function(coordinate) {
         var x = coordinate[0];
