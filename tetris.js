@@ -149,12 +149,29 @@ Config = {
                 [5, 2]
             ]
         ],
+
+        //shape square 
+        //0 1 2 3 4 5 6 7 8 9
+        //1 . . X X . . . . .
+        //2 . . X X . . . . .
+        //3 . . . . . . . . .
+        //4 . . . . . . . . .
+        shapeFour = [
+            [
+                [3, 1],
+                [4, 1],
+                [3, 2],
+                [4, 2]
+            ]
+        ],
+
+
     ],
     interval: 1000
 }
 
 
-backwards L, square, Z, T, backwards Z
+square, Z, T, backwards Z
 // TETRIS
 var Tetris = function() {
     this.fallingPiece = null;
