@@ -391,27 +391,35 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
     var coords = piece.currentCoordinates;
     piece.resetMoves();
     if (this.grid.checkMoves(piece, direction)) {
-        for (var i = 0; i < coords.length; i++) {
-            var x = coords[i][0],
-                y = coords[i][1];
+        if (direction == 'rotate') {
+            console.log('going to call rotate..')
+            piece.rotate();
+            var cells = [];
+            piece.currentCoordinates.forEach(function(coord) {
+                var cell = this.grid.assignCells(coord);
+                cells.push(cell);
+            })
+            piece.cells = cells;
+        } else {
+            for (var i = 0; i < coords.length; i++) {
+                var x = coords[i][0],
+                    y = coords[i][1];
 
-            switch (direction) {
-                case 'down':
-                    y = y + 1;
-                    break;
-                case 'left':
-                    x = x - 1;
-                    break;
-                case 'right':
-                    x = x + 1;
-                    break;
-                case 'rotate':
-                    piece.changeOrientation();
-                    break;
+                switch (direction) {
+                    case 'down':
+                        y = y + 1;
+                        break;
+                    case 'left':
+                        x = x - 1;
+                        break;
+                    case 'right':
+                        x = x + 1;
+                        break;
+                }
+
+                coords[i] = [x, y];
+                cells[i] = this.grid.assignCells(coords[i]);
             }
-
-            coords[i] = [x, y];
-            cells[i] = this.grid.assignCells(coords[i]);
         }
     }
 }
@@ -608,7 +616,8 @@ Piece.prototype.resetMoves = function() {
     this.allowedMoves = {
         'right': true,
         'left': true,
-        'down': true
+        'down': true,
+        'rotate': true
     }
 }
 
@@ -656,19 +665,41 @@ Piece.prototype.colorInCells = function(color) {
     })
 }
 
-Piece.prototype.changeOrientation = function() {
+Piece.prototype.rotate = function() {
+    console.log('inside rotate..')
+    var originalCoords = this.shape[this.currentOrientation];
+
+    //set it to the next orientation;
     if (this.currentOrientation < this.orientations.length) {
         this.currentOrientation += 1;
-        this.currentCoordinates = this.orientations[this.currentOrientation];
     } else if (this.currentOrientation == this.orientations.length - 1) {
         this.currentOrientation = 0;
     }
 
+    //get the current coords
     var currentCoords = this.currentCoordinates;
-    var x = currentCoords[0];
-    var y = currentCoords[1];
+    //get offset from original coordinates (where it was first plopped on top) to now current coordinates (current location);
+    //offset is the same for all the coords, so just grab the first one to do calculations
+    var originalX = originalCoords[0][0];
+    var originalY = originalCoords[0][1];
+    var x = currentCoords[0][0];
+    var y = currentCoords[0][1];
+    var xOffset = x - originalX;
+    var yOffset = y - originalY;
 
-
+    //calculate the new rotation based on these offsets
+    var originalNextOrientation = this.shape[this.currentOrientation];
+    var coords = [];
+    for (var i=0; i<originalNextOrientation.length; i++) {
+        var coord = originalNextOrientation[i];
+        var x = coord[0];
+        var y = coord[1];
+        x = x + xOffset;
+        y = y + yOffset;
+        coords.push([x,y]);
+    }
+    console.log('new coords', coords)
+    this.currentCoordinates = coords;
 }
 
 // Piece.prototype.setAllowedMoves = function() {
@@ -737,6 +768,7 @@ EventListener.prototype.listenForKeyPresses = function(event) {
             break;
         case 32: //space to rotate
             console.log('32');
+            console.log('space btn pressed!')
             this.tetris.movePiece(piece, 'rotate');
             break;
         case 13: //enter for pause
