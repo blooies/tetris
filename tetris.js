@@ -667,10 +667,9 @@ Piece.prototype.colorInCells = function(color) {
 
 Piece.prototype.rotate = function() {
     console.log('inside rotate..')
-    var originalCoords = this.shape[this.currentOrientation];
-
+    var originalCoords = this.orientations[this.currentOrientation];
     //set it to the next orientation;
-    if (this.currentOrientation < this.orientations.length) {
+    if (this.currentOrientation < this.orientations.length - 1) {
         this.currentOrientation += 1;
     } else if (this.currentOrientation == this.orientations.length - 1) {
         this.currentOrientation = 0;
@@ -688,7 +687,9 @@ Piece.prototype.rotate = function() {
     var yOffset = y - originalY;
 
     //calculate the new rotation based on these offsets
-    var originalNextOrientation = this.shape[this.currentOrientation];
+    var originalNextOrientation = this.orientations[this.currentOrientation];
+    console.log(originalNextOrientation)
+    debugger;
     var coords = [];
     for (var i=0; i<originalNextOrientation.length; i++) {
         var coord = originalNextOrientation[i];
