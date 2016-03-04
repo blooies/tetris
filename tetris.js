@@ -3,11 +3,6 @@
 // 3: when row has been filled
 // 4: points
 
-//Grid, Cell, Piece, 
-// Cell knows what piece is on it
-// Piece knows what cells it is occupying
-// Grid holds cells
-
 // CONFIG
 Config = {
     gridName: 'grid',
@@ -152,16 +147,16 @@ Config = {
 
         //shape square 
         //0 1 2 3 4 5 6 7 8 9
-        //1 . . X X . . . . .
-        //2 . . X X . . . . .
+        //1 . . . X X . . . .
+        //2 . . . X X . . . .
         //3 . . . . . . . . .
         //4 . . . . . . . . .
         shapeFour = [
             [
-                [3, 1],
                 [4, 1],
-                [3, 2],
-                [4, 2]
+                [5, 1],
+                [4, 2],
+                [5, 2]
             ]
         ],
 
