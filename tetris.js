@@ -303,15 +303,7 @@ Tetris.prototype.generateRandomPiece = function(shape) {
     var randomOrientation = this.getRandomNumber(shape.length);
     var piece = new Piece(shape, randomOrientation);
     this.fallingPiece = piece;
-    console.log("NEW PIECE", piece)
-
     this.assignCellsToPiece(piece);
-    piece.cells.forEach(function(cell) {
-        if (cell == undefined) {
-            console.log("STOP")
-            debugger;
-        }
-    })
     var color = this.getRandomColor();
     piece.colorInCells(color);
 }
@@ -382,7 +374,6 @@ Tetris.prototype.movePiece = function(piece, direction) {
     console.log(piece)
     console.log(piece.fallen)
     if (piece.fallen) {
-        console.log("MARKING...")
         this.markCellsAsFilled(piece);
         this.fallingPiece = null;
         this.dropNewPiece();
@@ -397,11 +388,9 @@ Tetris.prototype.movePiece = function(piece, direction) {
 }
 
 Tetris.prototype.markCellsAsFilled = function(piece) {
-    console.log("MARKING>..")
     for (var i=0; i<piece.cells.length; i++) {
         var cell = piece.cells[i];
         this.grid.markCells(cell);
-        console.log("***************", cell);
     }
 }
 
@@ -707,16 +696,12 @@ EventListener.prototype.listenForKeyPresses = function(event) {
             this.tetris.movePiece(piece, 'left');
             break;
         case 39: //right
-            console.log('39');
             this.tetris.movePiece(piece, 'right');
             break;
         case 40: //down
-            console.log('40')
             this.tetris.movePiece(piece, 'down');
             break;
         case 32: //space to rotate
-            console.log('32');
-            console.log('space btn pressed!')
             this.tetris.movePiece(piece, 'rotate');
             break;
         case 13: //enter for pause
