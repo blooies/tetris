@@ -426,6 +426,7 @@ Tetris.prototype.movePiece = function(piece, direction) {
     console.log(piece)
     console.log(piece.fallen)
     if (piece.fallen) {
+        console.log("MARKING...")
         this.markCellsAsFilled(piece);
         this.fallingPiece = null;
         this.dropNewPiece();
@@ -440,10 +441,11 @@ Tetris.prototype.movePiece = function(piece, direction) {
 }
 
 Tetris.prototype.markCellsAsFilled = function(piece) {
+    console.log("MARKING>..")
     for (var i=0; i<piece.cells.length; i++) {
         var cell = piece.cells[i];
-        console.log(cell);
         this.grid.markCells(cell);
+        console.log("***************", cell);
     }
 }
 
@@ -511,8 +513,11 @@ Grid.prototype.appendCell = function(cell) {
 Grid.prototype.assignCells = function(coordinates) {
     var x = coordinates[0];
     var y = coordinates[1];
-    var cell = this.cells[x][y];
-    return cell;
+
+    if (x >= 0 && x <= Config.size.width - 1 && y <= Config.size.height - 1) {
+        var cell = this.cells[x][y];
+        return cell;
+    }
 }
 
 Grid.prototype.markCells = function(cell) {
@@ -527,12 +532,13 @@ Grid.prototype.checkMoves = function(piece, direction) {
         var xLeft = originalX - 1;
         var xRight = originalX + 1;
         var yDown = originalY + 1;
+        console.log(originalX, yDown)
         var xLeftCell = this.assignCells([xLeft, originalY]);
         var xRightCell = this.assignCells([xRight, originalY]);
         var yDownCell = this.assignCells([originalX, yDown]);
 
         if (direction == 'down') {
-            console.log("******", yDownCell)
+            console.log("**********", yDownCell)
             if (yDown >= Config.size.height || yDownCell.marked) {
                 piece.allowedMoves.down = false;
                 piece.allowedMoves.left = false;
@@ -584,7 +590,7 @@ Cell.prototype.unMark = function() {
 }
 
 Cell.prototype.mark = function() {
-    this.mark = true;
+    this.marked = true;
 }
 
 
@@ -734,7 +740,13 @@ EventListener.prototype.listenForKeyPresses = function(event) {
             this.tetris.movePiece(piece, 'rotate');
             break;
         case 13: //enter for pause
-            clearInterval(timer);
+            if (this.paused) {
+                this.startTimer();
+                this.paused = false;
+            } else {
+                clearInterval(timer);
+                this.paused = true;
+            }
             break;
     }
 }
