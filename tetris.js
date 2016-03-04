@@ -523,7 +523,6 @@ Grid.prototype.checkMoves = function(piece, direction) {
 }
 
 var Cell = function(x, y) {
-    this.coordinates = String(x) + String(y);
     this.x = x;
     this.y = y;
     this.color = Config.cellDefaultColor;
@@ -731,8 +730,3 @@ EventListener.prototype.listenForKeyPresses = function(event) {
             break;
     }
 }
-
-
-//when the pieces are falling down,
-// the cells do not change. the cells are like coordinates.
-// BUT the cells in the piece() change and then they redraw themselves
