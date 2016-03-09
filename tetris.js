@@ -382,7 +382,7 @@ Tetris.prototype.movePiece = function(piece, direction) {
             cells[i].unMark();
         }
         this.changeCoordinates(cells, piece, direction);
-        piece.colorInCells();
+        if (!piece.fallen) piece.colorInCells();
     }
 }
 
@@ -529,7 +529,6 @@ Piece.prototype.colorInCells = function(color) {
 }
 
 Piece.prototype.rotate = function() {
-    console.log('inside rotate..')
     var originalCoords = this.orientations[this.currentOrientation];
     //set it to the next orientation;
     if (this.currentOrientation < this.orientations.length - 1) {
@@ -584,6 +583,7 @@ EventListener.prototype.startTimer = function() {
 
 EventListener.prototype.trigger = function() {
     var piece = this.tetris.fallingPiece;
+    console.log("FALLING PIECE", piece)
     this.tetris.movePiece(piece, 'down');
 }
 
