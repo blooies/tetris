@@ -330,7 +330,6 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
     }
 
     var coords = piece.currentCoordinates;
-    piece.resetMoves();
     this.grid.setAllowedMoves(piece, direction);
     if (piece.allowedMoves[direction]) {
         if (direction == 'rotate') {
@@ -372,7 +371,9 @@ Tetris.prototype.dropNewPiece = function() {
 
 // this is the function that gets triggered by the EventListener for each interval
 Tetris.prototype.movePiece = function(piece, direction) {
+    console.log('inside move piece', piece)
     if (piece.fallen) {
+        console.log('piece is fallen, so we are dropping new piece')
         this.markCellsAsFilled(piece);
         this.fallingPiece = null;
         this.dropNewPiece();
@@ -437,6 +438,8 @@ Grid.prototype.markCells = function(cell) {
 }
 
 Grid.prototype.setAllowedMoves = function(piece, direction) {
+    piece.resetMoves();
+
     for (var i=0; i<piece.currentCoordinates.length; i++) {
         var currentCoordinate = piece.currentCoordinates[i];
         var originalX = currentCoordinate[0];
