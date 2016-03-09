@@ -311,7 +311,7 @@ Tetris.prototype.generateRandomPiece = function(shape) {
 Tetris.prototype.assignCellsToPiece = function(piece) {
     var coords = piece.currentCoordinates;
     for (var i = 0; i < coords.length; i++) {
-        var cell = this.grid.assignCells(coords[i]);
+        var cell = this.grid.getCell(coords[i]);
         piece.cells.unshift(cell);
     }
 }
@@ -322,6 +322,7 @@ Tetris.prototype.getRandomColor = function() {
     return randomColor;
 }
 
+// this is the function that changes the cells in the piece based on the new direction
 Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
     var boundaries = {
         x: Config.size.width - 1,
@@ -330,13 +331,13 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
 
     var coords = piece.currentCoordinates;
     piece.resetMoves();
-    if (this.grid.checkMoves(piece, direction)) {
+    this.grid.setAllowedMoves(piece, direction);
+    if (piece.allowedMoves[direction]) {
         if (direction == 'rotate') {
-            console.log('going to call rotate..')
             piece.rotate();
             var cells = [];
             piece.currentCoordinates.forEach(function(coord) {
-                var cell = this.grid.assignCells(coord);
+                var cell = this.grid.getCell(coord);
                 cells.push(cell);
             })
             piece.cells = cells;
@@ -358,7 +359,7 @@ Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
                 }
 
                 coords[i] = [x, y];
-                cells[i] = this.grid.assignCells(coords[i]);
+                cells[i] = this.grid.getCell(coords[i]);
             }
         }
     }
@@ -369,10 +370,8 @@ Tetris.prototype.dropNewPiece = function() {
     this.generateRandomPiece(shape);
 }
 
-
+// this is the function that gets triggered by the EventListener for each interval
 Tetris.prototype.movePiece = function(piece, direction) {
-    console.log(piece)
-    console.log(piece.fallen)
     if (piece.fallen) {
         this.markCellsAsFilled(piece);
         this.fallingPiece = null;
@@ -423,7 +422,7 @@ Grid.prototype.appendCell = function(cell) {
     this.el.appendChild(cell.el);
 }
 
-Grid.prototype.assignCells = function(coordinates) {
+Grid.prototype.getCell = function(coordinates) {
     var x = coordinates[0];
     var y = coordinates[1];
 
@@ -437,7 +436,7 @@ Grid.prototype.markCells = function(cell) {
     cell.mark();
 }
 
-Grid.prototype.checkMoves = function(piece, direction) {
+Grid.prototype.setAllowedMoves = function(piece, direction) {
     for (var i=0; i<piece.currentCoordinates.length; i++) {
         var currentCoordinate = piece.currentCoordinates[i];
         var originalX = currentCoordinate[0];
@@ -445,19 +444,16 @@ Grid.prototype.checkMoves = function(piece, direction) {
         var xLeft = originalX - 1;
         var xRight = originalX + 1;
         var yDown = originalY + 1;
-        console.log(originalX, yDown)
-        var xLeftCell = this.assignCells([xLeft, originalY]);
-        var xRightCell = this.assignCells([xRight, originalY]);
-        var yDownCell = this.assignCells([originalX, yDown]);
+        var xLeftCell = this.getCell([xLeft, originalY]);
+        var xRightCell = this.getCell([xRight, originalY]);
+        var yDownCell = this.getCell([originalX, yDown]);
 
         if (direction == 'down') {
-            console.log("**********", yDownCell)
             if (yDown >= Config.size.height || yDownCell.marked) {
                 piece.allowedMoves.down = false;
                 piece.allowedMoves.left = false;
                 piece.allowedMoves.right = false;
                 console.log('setting piece.fallen as TRUE')
-                console.log(piece)
                 piece.fallen = true;
             }
         }
@@ -475,7 +471,6 @@ Grid.prototype.checkMoves = function(piece, direction) {
         }
     }
 
-    console.log(piece.allowedMoves)
     return piece.allowedMoves[direction];
 }
 
@@ -523,42 +518,6 @@ Piece.prototype.resetMoves = function() {
         'down': true,
         'rotate': true
     }
-}
-
-Piece.prototype.checkMoves = function(direction) {
-    this.resetMoves();
-    for (var i=0; i<this.currentCoordinates.length; i++) {
-        var currentCoordinate = this.currentCoordinates[i];
-        var xLeft = currentCoordinate[0] - 1;
-        var xRight = currentCoordinate[0] + 1;
-        var yDown = currentCoordinate[1] + 1;
-
-        if (direction == 'down') {
-            if (yDown >= Config.size.height) {
-                this.allowedMoves.down = false;
-                this.allowedMoves.left = false;
-                this.allowedMoves.right = false;
-                console.log('setting piece.fallen as TRUE')
-                console.log(this)
-                this.fallen = true;
-            }
-        }
-
-        if (direction == 'left') {
-            if (xLeft < 0) {
-                this.allowedMoves.left = false;
-            }
-        }
-
-        if (direction == 'right') {
-            if (xRight >= Config.size.width) {
-                this.allowedMoves.right = false;
-            }
-        }
-    }
-
-    console.log(this.allowedMoves)
-    return this.allowedMoves[direction];
 }
 
 Piece.prototype.colorInCells = function(color) {
