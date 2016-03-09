@@ -383,7 +383,7 @@ Tetris.prototype.movePiece = function(piece, direction) {
             cells[i].unMark();
         }
         this.changeCoordinates(cells, piece, direction);
-        if (!piece.fallen) piece.colorInCells();
+        piece.colorInCells();
     }
 }
 
@@ -553,8 +553,6 @@ Piece.prototype.rotate = function() {
 
     //calculate the new rotation based on these offsets
     var originalNextOrientation = this.orientations[this.currentOrientation];
-    console.log(originalNextOrientation)
-    debugger;
     var coords = [];
     for (var i=0; i<originalNextOrientation.length; i++) {
         var coord = originalNextOrientation[i];
