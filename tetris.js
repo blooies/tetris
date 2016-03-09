@@ -394,6 +394,38 @@ Tetris.prototype.markCellsAsFilled = function(piece) {
     }
 }
 
+// Tetris.prototype.setAllowedMoves = function(piece) {
+//     var self = this;
+//     piece.resetMoves();
+//     piece.currentCoordinates.forEach(function(coordinate) {
+//         var x = coordinate[0];
+//         var y = coordinate[1];
+//         var xLeftCoordinate = x - 1;
+//         var xRightCoordinate = x + 1;
+//         var yDownCoordinate = y + 1;
+//         // var xLeftCell = self.grid.assignCells([xLeftCoordinate, y]);
+//         // var xRightCell = self.grid.assignCells([xRightCoordinate, y]);
+//         // var yDownCell = self.grid.assignCells([x, yDownCoordinate]);
+//         // console.log(xLeftCell, xRightCell, yDownCell)
+
+//         if (xLeftCoordinate < 0) {
+//             piece.allowedMoves.left = false;
+//             console.log("SETTING LEFT FALSE")
+//         }
+
+//         if (xRightCoordinate >= Config.size.width) {
+//             piece.allowedMoves.right = false;
+//             console.log("SETTING RIGHT FALSE")
+//         }
+
+//         if (yDownCoordinate >= Config.size.height) {
+//             piece.allowedMoves.down = false;
+//             piece.allowedMoves.right = false;
+//             piece.allowedMoves.left = false;
+//             piece.fallen = true;
+//         }
+//     })
+// }
 
 // GRID
 var Grid = function() {
@@ -565,6 +597,35 @@ Piece.prototype.rotate = function() {
     console.log('new coords', coords)
     this.currentCoordinates = coords;
 }
+
+// Piece.prototype.setAllowedMoves = function() {
+//     this.resetMoves();
+//     var self = this;
+//     this.currentCoordinates.forEach(function(coordinate) {
+//         var x = coordinate[0];
+//         var y = coordinate[1];
+//         var xLeftCoordinate = x - 1;
+//         var xRightCoordinate = x + 1;
+//         var yDownCoordinate = y + 1;
+
+//         if (x - 1 < 0) {
+//             self.allowedMoves.left = false;
+//             console.log("SETTING LEFT FALSE")
+//         }
+
+//         if (x + 1 >= Config.size.width) {
+//             self.allowedMoves.right = false;
+//             console.log("SETTING RIGHT FALSE")
+//         }
+
+//         if (y + 1 >= Config.size.height) {
+//             self.allowedMoves.down = false;
+//             self.allowedMoves.right = false;
+//             self.allowedMoves.left = false;
+//             self.fallen = true;
+//         }
+//     })
+// }
 
 
 // EVENT LISTENER
