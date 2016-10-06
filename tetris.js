@@ -16,84 +16,90 @@ Config = {
     ],
     shapes: [
         //shape I
-        //0 1 2 3 4 5 6 7 8 9
+        //* 1 2 3 4 5 6 7 8 9
+        //0 . . . . X . . . .
         //1 . . . . X . . . .
         //2 . . . . X . . . .
         //3 . . . . X . . . .
-        //4 . . . . X . . . .
+        //4 . . . . . . . . .
 
-        //0 1 2 3 4 5 6 7 8 9
+        //* 1 2 3 4 5 6 7 8 9
+        //0 . . X X X X . . .
         //1 . . . . . . . . .
         //2 . . . . . . . . .
         //3 . . . . . . . . .
-        //4 . . X X X X . . .
-        shapeOne = [
+        //4 . . . . . . . . .
+        [
             [
+                [5, 0],
                 [5, 1],
                 [5, 2],
-                [5, 3],
-                [5, 4]
+                [5, 3]
             ],
             [
-                [3, 4],
-                [4, 4],
-                [5, 4],
-                [6, 4]
+                [3, 0],
+                [4, 0],
+                [5, 0],
+                [6, 0]
             ]
         ],
 
         //shape L
-        //0 1 2 3 4 5 6 7 8 9
+        //* 1 2 3 4 5 6 7 8 9
+        //0 . . . X . . . . 
         //1 . . . X . . . . .
-        //2 . . . X . . . . .
-        //3 . . . X X . . . .
+        //2 . . . X X . . . .
+        //3 . . . . . . . . .
         //4 . . . . . . . . .
 
-        //0 1 2 3 4 5 6 7 8 9
-        //1 . . . . . . . . .
-        //2 . . . X X X . . .
-        //3 . . . X . . . . .
+        //* 1 2 3 4 5 6 7 8 9
+        //0 . . . X X X . . .
+        //1 . . . X . . . . .
+        //2 . . . . . . . . .
+        //3 . . . . . . . . .
         //4 . . . . . . . . .
 
-        //0 1 2 3 4 5 6 7 8 9
-        //1 . . . . X X . . .
+        //* 1 2 3 4 5 6 7 8 9
+        //0 . . . . X X . . .
+        //1 . . . . . X . . .
         //2 . . . . . X . . .
-        //3 . . . . . X . . .
+        //3 . . . . . . . . .
         //4 . . . . . . . . .
 
-        //0 1 2 3 4 5 6 7 8 9
-        //1 . . . . . . . . .
-        //2 . . . . . X . . .
-        //3 . . . X X X . . .
+        //* 1 2 3 4 5 6 7 8 9
+        //0 . . . . . X . . .
+        //1 . . . X X X . . .
+        //2 . . . . . . . . .
+        //3 . . . . . . . . .
         //4 . . . . . . . . .
 
-        shapeTwo = [
+        [
             [
+                [4, 0],
                 [4, 1],
                 [4, 2],
-                [4, 3],
-                [5, 3]
+                [5, 2]
             ],
             [
-                [4, 2],
-                [5, 2],
-                [6, 2],
-                [4, 3]
+                [4, 0],
+                [5, 0],
+                [6, 0],
+                [4, 1]
             ],
             [
-                [5, 1],
+                [5, 0],
+                [6, 0],
                 [6, 1],
-                [6, 2],
-                [6, 3]
+                [6, 2]
             ],
             [
-                [4, 3],
-                [5, 3],
-                [6, 3],
-                [6, 2]
+                [4, 1],
+                [5, 1],
+                [6, 0],
+                [6, 1]
             ]
         ],
-
+// ****HERE
         //shape backwards L
         //0 1 2 3 4 5 6 7 8 9
         //1 . . . X . . . . .
@@ -118,7 +124,7 @@ Config = {
         //2 . . X X X . . . .
         //3 . . . . X . . . .
         //4 . . . . . . . . .
-        shapeThree = [
+        [
             [
                 [4, 1],
                 [4, 2],
@@ -151,7 +157,7 @@ Config = {
         //2 . . . X X . . . .
         //3 . . . . . . . . .
         //4 . . . . . . . . .
-        shapeFour = [
+        [
             [
                 [4, 1],
                 [5, 1],
@@ -184,7 +190,7 @@ Config = {
         //2 . . X X . . . . .
         //3 . . X . . . . . .
         //4 . . . . . . . . .
-        shapeFive = [
+        [
             [
                 [3, 2],
                 [4, 2],
@@ -224,7 +230,7 @@ Config = {
         //3 . . . X . . . . .
         //4 . . . . . . . . .
 
-        shapeSix = [
+        [
             [
                 [3, 2],
                 [4, 2],
@@ -251,7 +257,7 @@ Config = {
         //2 . . . X X . . . .
         //3 . . . . X . . . .
         //4 . . . . . . . . .
-        shapeSeven = [
+        [
             [
                 [4, 2],
                 [5, 2],
@@ -274,7 +280,6 @@ var Tetris = function() {
     this.fallingPiece = null;
     this.grid = new Grid();
     this.eventListener = new EventListener(this);
-    this.startGame();
 }
 
 Tetris.prototype = {
@@ -284,14 +289,15 @@ Tetris.prototype = {
 
 Tetris.prototype.startGame = function() {
     this.grid.buildCells();
-    var shape = this.generateRandomShape();
-    var piece = this.generateRandomPiece(shape);
+    var shapeOrientations = this.generateRandomShape();
+    this.generateRandomPiece(shapeOrientations);
     this.eventListener.startTimer();
 }
 
 Tetris.prototype.generateRandomShape = function() {
-    var randomNum = this.getRandomNumber(this.shapes.length);
-    var randomShape = this.shapes[randomNum];
+    // var randomNum = this.getRandomNumber(this.shapes.length);
+    // var randomShape = this.shapes[randomNum];
+    var randomShape = this.shapes[0];
     return randomShape;
 }
 
@@ -299,9 +305,10 @@ Tetris.prototype.getRandomNumber = function(notIncluding) {
     return Math.floor(Math.random() * notIncluding);
 }
 
-Tetris.prototype.generateRandomPiece = function(shape) {
-    var randomOrientation = this.getRandomNumber(shape.length);
-    var piece = new Piece(shape, randomOrientation);
+Tetris.prototype.generateRandomPiece = function(shapeOrientations) {
+    // var randomOrientation = this.getRandomNumber(shapeOrientations.length);
+    var randomOrientation = 1;
+    var piece = new Piece(shapeOrientations, randomOrientation);
     this.fallingPiece = piece;
     this.assignCellsToPiece(piece);
     var color = this.getRandomColor();
@@ -449,6 +456,8 @@ Grid.prototype.buildCells = function() {
             this.cells[x][y] = cell;
         }
     }
+
+    console.log(this.cells)
 }
 
 Grid.prototype.appendCell = function(cell) {
@@ -537,10 +546,10 @@ Cell.prototype.mark = function() {
 
 
 // PIECE
-var Piece = function(shape, orientation) {
-    this.orientations = shape;
+var Piece = function(shapeOrientations, orientation) {
+    this.orientations = shapeOrientations;
     this.currentOrientation = orientation;
-    this.currentCoordinates = shape[orientation];
+    this.currentCoordinates = shapeOrientations[orientation];
     this.cells = [];
     this.color = null;
     this.resetMoves();
