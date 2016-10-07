@@ -20,12 +20,9 @@ Grid.prototype.buildCells = function() {
             this.cells[x][y] = cell;
         }
     }
-
 }
 
-var time = 0;
 Grid.prototype.appendCell = function(cell) {
-    time += 1;
     this.el.appendChild(cell.el);
 }
 
