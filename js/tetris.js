@@ -57,46 +57,57 @@ Tetris.prototype.getRandomColor = function() {
 }
 
 // this is the function that changes the cells in the piece based on the new direction
-Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
-    var boundaries = {
-        x: Config.size.width - 1,
-        y: Config.size.height - 1
-    }
-
-    var coords = piece.currentCoordinates;
-    this.grid.setAllowedMoves(piece, direction);
-    if (piece.allowedMoves[direction]) {
-        if (direction == 'rotate') {
+Tetris.prototype.changeCoordinates = function(piece, direction) {
+    switch (direction) {
+        case 'rotate':
             piece.rotate();
-            var cells = [];
-            piece.currentCoordinates.forEach(function(coord) {
-                var cell = this.grid.getCell(coord);
-                cells.push(cell);
-            })
-            piece.cells = cells;
-        } else {
-            for (var i = 0; i < coords.length; i++) {
-                var x = coords[i][0],
-                    y = coords[i][1];
-
-                switch (direction) {
-                    case 'down':
-                        y = y + 1;
-                        break;
-                    case 'left':
-                        x = x - 1;
-                        break;
-                    case 'right':
-                        x = x + 1;
-                        break;
-                }
-
-                coords[i] = [x, y];
-                cells[i] = this.grid.getCell(coords[i]);
-            }
-        }
+            break;
+        default:
+            break;
     }
 }
+
+// Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
+//     console.log(cells, piece, direction)
+//     var boundaries = {
+//         x: Config.size.width - 1,
+//         y: Config.size.height - 1
+//     }
+
+//     var coords = piece.currentCoordinates;
+//     this.grid.setAllowedMoves(piece, direction);
+//     if (piece.allowedMoves[direction]) {
+//         if (direction == 'rotate') {
+//             piece.rotate();
+//             var cells = [];
+//             piece.currentCoordinates.forEach(function(coord) {
+//                 var cell = this.grid.getCell(coord);
+//                 cells.push(cell);
+//             })
+//             piece.cells = cells;
+//         } else {
+//             for (var i = 0; i < coords.length; i++) {
+//                 var x = coords[i][0],
+//                     y = coords[i][1];
+
+//                 switch (direction) {
+//                     case 'down':
+//                         y = y + 1;
+//                         break;
+//                     case 'left':
+//                         x = x - 1;
+//                         break;
+//                     case 'right':
+//                         x = x + 1;
+//                         break;
+//                 }
+
+//                 coords[i] = [x, y];
+//                 cells[i] = this.grid.getCell(coords[i]);
+//             }
+//         }
+//     }
+// }
 
 Tetris.prototype.dropNewPiece = function() {
     var shape = this.generateRandomShape();
@@ -114,10 +125,13 @@ Tetris.prototype.movePiece = function(piece, direction) {
     } else {
         var cells = piece.cells;
         for (var i = 0; i < cells.length; i++) {
-            cells[i].unMark();
+            // cells[i].unMark();
         }
-        this.changeCoordinates(cells, piece, direction);
-        piece.colorInCells();
+
+        this.changeCoordinates(piece, direction);
+        // console.log("ROTATINGGG>..", cells, piece, direction)
+        // this.changeCoordinates(cells, piece, direction);
+        // piece.colorInCells();
     }
 }
 
