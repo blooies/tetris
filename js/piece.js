@@ -1,7 +1,7 @@
 // PIECE
 var Piece = function(shapeOrientations, orientation) {
     this.orientations = shapeOrientations;
-    this.currentOrientation = orientation;
+    this.currentOrientation = orientation; //integer;
     this.currentCoordinates = shapeOrientations[orientation];
     this.cells = [];
     this.color = null;
@@ -20,9 +20,10 @@ Piece.prototype.resetMoves = function() {
 Piece.prototype.colorInCells = function(color) {
     if (color) this.color = color;
     if (!color && this.color) color = this.color;
-    this.cells.forEach(function(cell) {
+    for (var i=0; i<this.cells.length; i++) {
+        var cell = cells[i];
         cell.fillColor(color);
-    })
+    }
 }
 
 Piece.prototype.rotate = function() {
