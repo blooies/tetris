@@ -20,27 +20,30 @@ EventListener.prototype.trigger = function() {
 
 EventListener.prototype.listenForKeyPresses = function(event) {
     var piece = this.tetris.fallingPiece;
-    switch (event.keyCode) {
-        case 37: //left
-            this.tetris.movePiece(piece, 'left');
-            break;
-        case 39: //right
-            this.tetris.movePiece(piece, 'right');
-            break;
-        case 40: //down
-            this.tetris.movePiece(piece, 'down');
-            break;
-        case 32: //space to rotate
-            this.tetris.movePiece(piece, 'rotate');
-            break;
-        case 13: //enter for pause
-            if (this.paused) {
-                this.startTimer();
-                this.paused = false;
-            } else {
-                clearInterval(timer);
-                this.paused = true;
-            }
-            break;
+
+    if (!this.tetris.gameOver) {
+        switch (event.keyCode) {
+            case 37: //left
+                this.tetris.movePiece(piece, 'left');
+                break;
+            case 39: //right
+                this.tetris.movePiece(piece, 'right');
+                break;
+            case 40: //down
+                this.tetris.movePiece(piece, 'down');
+                break;
+            case 32: //space to rotate
+                this.tetris.movePiece(piece, 'rotate');
+                break;
+            case 13: //enter for pause
+                if (this.paused) {
+                    this.startTimer();
+                    this.paused = false;
+                } else {
+                    clearInterval(timer);
+                    this.paused = true;
+                }
+                break;
+        }
     }
 }

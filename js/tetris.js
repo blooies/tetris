@@ -4,11 +4,16 @@
 // 4: points
 
 
+//before this, i apparently do not know how to play tetris.
+
+
 // TETRIS
 var Tetris = function() {
     this.fallingPiece = null;
+    this.pieces = [];
     this.grid = new Grid();
     this.eventListener = new EventListener(this);
+    this.gameOver = false;
 }
 
 Tetris.prototype = {
@@ -35,8 +40,9 @@ Tetris.prototype.getRandomNumber = function(notIncluding) {
 
 Tetris.prototype.generateRandomPiece = function(shapeOrientations) {
     var randomOrientation = this.getRandomNumber(shapeOrientations.length);
-    var piece = new Piece(shapeOrientations, randomOrientation);
+    var piece = new Piece(shapeOrientations, randomOrientation, this.grid);
     this.fallingPiece = piece;
+    this.pieces.push(piece);
     this.assignCellsToPiece(piece);
     var color = this.getRandomColor();
     piece.colorInCells(color);
@@ -56,82 +62,133 @@ Tetris.prototype.getRandomColor = function() {
     return randomColor;
 }
 
+
 // this is the function that changes the cells in the piece based on the new direction
-Tetris.prototype.changeCoordinates = function(piece, direction) {
-    switch (direction) {
-        case 'rotate':
-            piece.rotate();
-            break;
-        default:
-            break;
+Tetris.prototype.movePieceInDirection = function(piece, direction) {
+    this.setAllowedMoves(piece, direction);
+    if (piece.allowedMoves[direction]) {
+        this.emptyCells(piece);
+        if (direction == 'rotate') {
+            piece.getRotationCoordinates();
+        } else {
+            piece.getCoordinates(direction);
+        }
+        this.markNewCells(piece);
     }
 }
 
-// Tetris.prototype.changeCoordinates = function(cells, piece, direction) {
-//     console.log(cells, piece, direction)
-//     var boundaries = {
-//         x: Config.size.width - 1,
-//         y: Config.size.height - 1
-//     }
+Tetris.prototype.movePiecesInDirection = function(direction) {
+    for (var i=0; i<this.pieces.length; i++) {
+        this.movePieceInDirection(this.pieces[i], direction);
+    }
+}
 
-//     var coords = piece.currentCoordinates;
-//     this.grid.setAllowedMoves(piece, direction);
-//     if (piece.allowedMoves[direction]) {
-//         if (direction == 'rotate') {
-//             piece.rotate();
-//             var cells = [];
-//             piece.currentCoordinates.forEach(function(coord) {
-//                 var cell = this.grid.getCell(coord);
-//                 cells.push(cell);
-//             })
-//             piece.cells = cells;
-//         } else {
-//             for (var i = 0; i < coords.length; i++) {
-//                 var x = coords[i][0],
-//                     y = coords[i][1];
+Tetris.prototype.checkIfPieceReachedTop = function(piece) {
+    var cells = piece.cells;
+    for (var i=0; i<cells.length; i++) {
+        var cell = cells[i];
+        if (cell.y <= 0) {
+            console.log("REACHED TOP OF BOARD MARKING TRUE!")
+            document.getElementById('message').innerHTML = 'GAME OVER';
+            piece.reachedTopOfBoard = true;
+            return true;
+        } 
+    }
 
-//                 switch (direction) {
-//                     case 'down':
-//                         y = y + 1;
-//                         break;
-//                     case 'left':
-//                         x = x - 1;
-//                         break;
-//                     case 'right':
-//                         x = x + 1;
-//                         break;
-//                 }
+    return false;
+}
 
-//                 coords[i] = [x, y];
-//                 cells[i] = this.grid.getCell(coords[i]);
-//             }
-//         }
-//     }
-// }
+
+Tetris.prototype.setAllowedMoves = function(piece, direction) {
+    piece.resetMoves();
+    console.log(piece)
+    for (var i=0; i<piece.currentCoordinates.length; i++) {
+        var currentCoordinate = piece.currentCoordinates[i];
+        var originalX = currentCoordinate[0];
+        var originalY = currentCoordinate[1];
+        var xLeft = originalX - 1;
+        var xRight = originalX + 1;
+        var yDown = originalY + 1;
+        var xLeftCell = this.grid.getCell([xLeft, originalY]);
+        var xRightCell = this.grid.getCell([xRight, originalY]);
+        var yDownCell = this.grid.getCell([originalX, yDown]);
+
+        if (direction == 'down') {
+            console.log(yDown, yDownCell)
+            if (yDown >= Config.size.height || yDownCell.marked) {
+                piece.allowedMoves.down = false;
+                piece.allowedMoves.left = false;
+                piece.allowedMoves.right = false;
+                console.log('setting piece.fallen as TRUE')
+                piece.fallen = true;
+                if (this.checkIfPieceReachedTop(piece)) {
+                    console.log("DONEE")
+                    this.gameOver = true;
+                    piece.reachedTopOfBoard = true;
+                    clearInterval(timer);
+                }
+            }
+        }
+
+        if (direction == 'left') {
+            if (xLeft < 0 || xLeftCell.marked) {
+                piece.allowedMoves.left = false;
+            }
+        }
+
+        if (direction == 'right') {
+            if (xRight >= Config.size.width || xRightCell.marked) {
+                piece.allowedMoves.right = false;
+            }
+        }
+
+    }
+}
+
+// ****MARK PIECE AS FILLED IS CAUSING BUG
+Tetris.prototype.unMarkAllCells = function() {
+    for (var i=0; i<this.pieces.length; i++) {
+        for (var j=0; j<this.pieces[i].cells.length; j++) {
+            var cell = this.pieces[i].cells[j];
+            cell.unMark();
+        }
+    }
+}
+
+Tetris.prototype.emptyCells = function(piece) {
+    var cells = piece.cells;
+    for (var i = 0; i < cells.length; i++) {
+        cells[i].unMark(piece);
+    }
+}
+
+Tetris.prototype.markNewCells = function(piece) {
+    var self = this;
+    var cells = [];
+    piece.currentCoordinates.forEach(function(coord) {
+        var cell = self.grid.getCell(coord);
+        cells.push(cell);
+    })
+    piece.updateCells(cells);
+}
+
 
 Tetris.prototype.dropNewPiece = function() {
     var shape = this.generateRandomShape();
     this.generateRandomPiece(shape);
 }
 
-// this is the function that gets triggered by the EventListener for each interval
 Tetris.prototype.movePiece = function(piece, direction) {
-    console.log('inside move piece', piece)
     if (piece.fallen) {
-        console.log('piece is fallen, so we are dropping new piece')
         this.markCellsAsFilled(piece);
         this.fallingPiece = null;
+        this.grid.checkForFilledRows();
         this.dropNewPiece();
+    } else if (piece.reachedTopOfBoard) {
+        console.log("DONEEEE")
+        clearInterval(timer);
     } else {
-        var cells = piece.cells;
-        for (var i = 0; i < cells.length; i++) {
-            // cells[i].unMark();
-        }
-
-        this.changeCoordinates(piece, direction);
-        // console.log("ROTATINGGG>..", cells, piece, direction)
-        // this.changeCoordinates(cells, piece, direction);
-        // piece.colorInCells();
+        this.movePieceInDirection(piece, direction);
     }
 }
 
@@ -139,38 +196,6 @@ Tetris.prototype.markCellsAsFilled = function(piece) {
     for (var i=0; i<piece.cells.length; i++) {
         var cell = piece.cells[i];
         this.grid.markCells(cell);
+        cell.updateWithPiece(piece);
     }
 }
-
-// Tetris.prototype.setAllowedMoves = function(piece) {
-//     var self = this;
-//     piece.resetMoves();
-//     piece.currentCoordinates.forEach(function(coordinate) {
-//         var x = coordinate[0];
-//         var y = coordinate[1];
-//         var xLeftCoordinate = x - 1;
-//         var xRightCoordinate = x + 1;
-//         var yDownCoordinate = y + 1;
-//         // var xLeftCell = self.grid.assignCells([xLeftCoordinate, y]);
-//         // var xRightCell = self.grid.assignCells([xRightCoordinate, y]);
-//         // var yDownCell = self.grid.assignCells([x, yDownCoordinate]);
-//         // console.log(xLeftCell, xRightCell, yDownCell)
-
-//         if (xLeftCoordinate < 0) {
-//             piece.allowedMoves.left = false;
-//             console.log("SETTING LEFT FALSE")
-//         }
-
-//         if (xRightCoordinate >= Config.size.width) {
-//             piece.allowedMoves.right = false;
-//             console.log("SETTING RIGHT FALSE")
-//         }
-
-//         if (yDownCoordinate >= Config.size.height) {
-//             piece.allowedMoves.down = false;
-//             piece.allowedMoves.right = false;
-//             piece.allowedMoves.left = false;
-//             piece.fallen = true;
-//         }
-//     })
-// }
