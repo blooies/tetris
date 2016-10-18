@@ -42,6 +42,10 @@ Grid.prototype.markCells = function(cell) {
     cell.mark();
 }
 
+Grid.prototype.unMarkCells = function(cell) {
+    cell.unMark();
+}
+
 // Grid.prototype.checkForMatchingCells = function(cell) {
 //     var up = this.getCell(cell.getUpNeighbor());
 //     var down = this.getCell(cell.getDownNeighbor());
@@ -61,12 +65,25 @@ Grid.prototype.markCells = function(cell) {
 // }
 
 Grid.prototype.checkForFilledRows = function() {
+    var rowIndices = [];
     for (var rowIndex=0; rowIndex<Config.size.height; rowIndex++) {
         var filledRow = this.checkForAFilledRow(rowIndex);
         if (filledRow) {
-            this.emptyRow(rowIndex);
+            // this.emptyRow(rowIndex);
+            this.rowIndices.push(rowIndex);
         }
     }
+
+    return rowIndices;
+}
+
+Grid.prototype.emptyRows = function(rowIndices) {
+    for (var i=0; i<rowIndices.length; i++) {
+        this.emptyRow(rowIndices[i]);
+    }
+    //clear cell color && marked && piece
+    //remove cell from piece
+    //remove current coords from piece
 }
 
 Grid.prototype.emptyRow = function(rowIndex) {
@@ -77,11 +94,6 @@ Grid.prototype.emptyRow = function(rowIndex) {
         console.log("UNMARKIGN CELL", cell)
         cell.unMark();
     }
-    //clear cell color && marked && piece
-    //remove cell from piece
-    //remove current coords from piece
-
-
 }
 
 Grid.prototype.checkForAFilledRow = function(rowIndex) {
