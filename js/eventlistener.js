@@ -14,26 +14,26 @@ EventListener.prototype.startTimer = function() {
 }
 
 EventListener.prototype.trigger = function() {
-    var piece = this.tetris.fallingPiece;
-    this.tetris.movePiece(piece, 'down');
+    // var piece = this.tetris.fallingPiece;
+    this.tetris.movePiece('down');
 }
 
 EventListener.prototype.listenForKeyPresses = function(event) {
-    var piece = this.tetris.fallingPiece;
+    // var piece = this.tetris.fallingPiece;
 
     if (!this.tetris.gameOver) {
         switch (event.keyCode) {
             case 37: //left
-                this.tetris.movePiece(piece, 'left');
+                this.tetris.movePiece('left');
                 break;
             case 39: //right
-                this.tetris.movePiece(piece, 'right');
+                this.tetris.movePiece('right');
                 break;
             case 40: //down
-                this.tetris.movePiece(piece, 'down');
+                this.tetris.movePiece('down');
                 break;
             case 32: //space to rotate
-                this.tetris.movePiece(piece, 'rotate');
+                this.tetris.movePiece('rotate');
                 break;
             case 13: //enter for pause
                 if (this.paused) {
