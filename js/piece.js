@@ -53,6 +53,17 @@ Piece.prototype.reassignCells = function() {
     }
 }
 
+Piece.prototype.eraseCell = function(cell) {
+    var i = this.currentCoordinates.length;
+    while (i--) {
+        var coord = this.currentCoordinates[i];
+        if (coord[0] == cell.x &&
+            coord[1] == cell.y) {
+            this.currentCoordinates.splice(i, 1);
+        }
+    }
+}
+
 Piece.prototype.getNewOrientationIndex = function(currentOrientationIndex) {
     var orientationIndex;
     if (this.currentOrientationIndex == this.orientations.length - 1) {

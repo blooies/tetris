@@ -156,17 +156,17 @@ Tetris.prototype.movePiece = function(piece, direction) {
     if (piece.fallen) {
         this.markCellsAsFilled(piece);
         this.fallingPiece = null;
-        // var filledRows = this.grid.checkForFilledRows();
+       
+        // var filledRows = this.grid.getRowsFilled();
         // if (filledRows.length > 0) {
-        //     this.grid.emptyRows(filledRows);
+        //     this.grid.emptyFilledRows(filledRows);
+        //     this.movePiecesDown();
         // }
-        var filledRows = this.grid.emptyFilledRows();
-        // this.movePiecesDown();
         this.dropNewPiece();
     } else if (piece.reachedTopOfBoard) {
         clearInterval(timer);
     } else {
-        console.log("PIECE", piece)
+        // console.log("PIECE", piece)
         this.movePieceInDirection(piece, direction);
     }
 }
@@ -179,6 +179,7 @@ Tetris.prototype.movePiecesDown = function() {
             var cell = piece.cells[j];
             cell.unMark();
         }
+        console.log("move piece", piece)
         this.movePieceInDirection(piece, 'down');
     }
 }

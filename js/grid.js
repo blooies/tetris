@@ -87,8 +87,10 @@ Grid.prototype.emptyRow = function(rowIndex) {
     for (var x=0; x<Config.size.width; x++) {
         var coord = [x, rowIndex];
         var cell = this.getCell(coord);
+        //cell disappears;
         cell.emptyColor();
         cell.unMark();
+        cell.piece.eraseCell(cell);
     }
 }
 
