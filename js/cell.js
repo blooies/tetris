@@ -16,19 +16,19 @@ Cell.prototype.buildHtml = function() {
     this.el = el;
 }
 
-Cell.prototype.unMark = function() {
-    this.el.setAttribute("class", "cell");
-    this.color = this.defaultColor;
-    this.marked = false;
-    this.piece = null;
-}
-
-Cell.prototype.mark = function(color, piece) {
+Cell.prototype.colorIn = function(color) {
     this.el.setAttribute("class", "cell " + color);
     this.color = color;
-    console.log("MARKING CELL", this)
+}
+
+Cell.prototype.mark = function(piece) {
     this.marked = true;
     this.piece = piece;
+}
+
+Cell.prototype.emptyColor = function() {
+    this.el.setAttribute("class", "cell");
+    this.color = this.defaultColor;
 }
 
 Cell.prototype.getUpNeighbor = function() {
@@ -49,10 +49,6 @@ Cell.prototype.getRightNeighbor = function() {
 Cell.prototype.getLeftNeighbor = function() {
     var x = this.x - 1;
     return [x, this.y];
-}
-
-Cell.prototype.updateWithPiece = function(piece) {
-    this.piece = piece;
 }
 
 Cell.prototype.getPiece = function() {

@@ -47,7 +47,7 @@ Tetris.prototype.generateRandomPiece = function(shapeOrientations) {
     this.pieces.push(piece);
     piece.reassignCells();
     var color = this.getRandomColor();
-    piece.markCells(color);
+    piece.colorInCells(color);
 }
 
 Tetris.prototype.assignCellsToPiece = function(piece) {
@@ -66,31 +66,24 @@ Tetris.prototype.getRandomColor = function() {
 
 // changes the cells in the piece based on the new direction
 Tetris.prototype.movePieceInDirection = function(direction) {
-    console.log("MOVE PIECE IN DIRECTION")
     var piece = this.fallingPiece;
-    console.log(piece)
     this.setAllowedMoves(piece, direction);
-    console.log("set allowed moves")
     if (piece.allowedMoves[direction]) {
-        console.log("here")
         piece.obliviateCells();
-        console.log('here 2')
         if (direction == 'rotate') {
             piece.getRotationCoordinates();
         } else {
             piece.getCoordinates(direction);
         }
-        console.log("GROW CELLS")
         piece.growCells();
     }
-    console.log('else?')
 }
 
 Tetris.prototype.checkIfPieceIsOnTopOfBoard = function(piece) {
     var cells = piece.cells;
     for (var i=0; i<cells.length; i++) {
         var cell = cells[i];
-        if (cell.y <= 0) {
+        if (cell.y <= 1) {
             console.log(cell)
             document.getElementById('message').innerHTML = 'GAME OVER';
             piece.reachedTopOfBoard = true;
@@ -116,7 +109,6 @@ Tetris.prototype.setAllowedMoves = function(piece, direction) {
 
         if (direction == 'down') {
             //reached bottom of board || reached top of another piece
-            console.log(yDown, Config.size.height, yDownCell, yDownCell.marked)
             if (yDown >= Config.size.height || yDownCell.marked) {
                 console.log("setting down as false")
                 piece.allowedMoves.down = false;
@@ -174,16 +166,6 @@ Tetris.prototype.movePiece = function(direction) {
 Tetris.prototype.markCellsAsFilled = function(piece) {
     for (var i=0; i<piece.cells.length; i++) {
         var cell = piece.cells[i];
-        // this.grid.markCells(cell);
-        cell.mark();
-        cell.updateWithPiece(piece);
-    }
-}
-
-Tetris.prototype.markCellsAsUnFilled = function(piece) {
-    for (var i=0; i<piece.cells.length; i++) {
-        var cell = piece.cells[i];
-        this.grid.unMarkCells(cell);
-        cell.updateWithPiece(piece);
+        cell.mark(piece);
     }
 }

@@ -23,28 +23,25 @@ Piece.prototype.resetMoves = function() {
     }
 }
 
-Piece.prototype.markCells = function(color) {
+Piece.prototype.colorInCells = function(color) {
     if (color) this.color = color;
     if (!color && this.color) color = this.color;
     for (var i=0; i<this.cells.length; i++) {
-        this.cells[i].mark(color, this);
-    }
-}
-
-Piece.prototype.unMarkCells = function() {
-    for (var i=0; i<this.cells.length; i++) {
-        this.cells[i].unMark(this);
+        this.cells[i].colorIn(color);
     }
 }
 
 Piece.prototype.obliviateCells = function() {
-    this.unMarkCells();
+    for (var i=0; i<this.cells.length; i++) {
+        this.cells[i].emptyColor();
+    }
+
     this.cells = [];
 }
 
 Piece.prototype.growCells = function() {
     this.reassignCells();
-    this.markCells();
+    this.colorInCells();
 }
 
 Piece.prototype.reassignCells = function() {
@@ -54,8 +51,6 @@ Piece.prototype.reassignCells = function() {
         this.cells.unshift(cell);
     }
 }
-
-
 
 Piece.prototype.getNewOrientationIndex = function(currentOrientationIndex) {
     var orientationIndex;
@@ -67,7 +62,6 @@ Piece.prototype.getNewOrientationIndex = function(currentOrientationIndex) {
 
     return orientationIndex;
 }
-
 
 Piece.prototype.getOffsetsBasedOnRotation = function(originalPosition, newPosition) {
     var offsets = [];
@@ -84,7 +78,6 @@ Piece.prototype.getOffsetsBasedOnRotation = function(originalPosition, newPositi
     return offsets;
 }
 
-
 Piece.prototype.getCoordinatesBasedOnOffsets = function(currentCoordinates, offsets) {
     var newCoordinates = [];
     for (var i=0; i<currentCoordinates.length; i++) {
@@ -97,7 +90,6 @@ Piece.prototype.getCoordinatesBasedOnOffsets = function(currentCoordinates, offs
 
     return newCoordinates;
 }
-
 
 //updates orientation index and current coordinates;
 Piece.prototype.getRotationCoordinates = function() {
@@ -114,7 +106,6 @@ Piece.prototype.getRotationCoordinates = function() {
         this.currentOrientationIndex = newOrientationIndex;
     }
 }
-
 
 Piece.prototype.getCoordinates =  function(direction) {
     var coords = this.currentCoordinates;
