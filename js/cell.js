@@ -11,7 +11,6 @@ var Cell = function(x, y) {
 
 Cell.prototype.buildHtml = function() {
     var el = document.createElement("div");
-    el.innerHTML = this.x +',' + this.y;
     el.setAttribute("class", "cell " + this.x + this.y);
     this.el = el;
 }
