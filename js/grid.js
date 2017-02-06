@@ -38,32 +38,6 @@ Grid.prototype.getCell = function(coordinates) {
     return null;
 }
 
-Grid.prototype.markCells = function(cell) {
-    cell.mark();
-}
-
-Grid.prototype.unMarkCells = function(cell) {
-    cell.unMark();
-}
-
-// Grid.prototype.checkForMatchingCells = function(cell) {
-//     var up = this.getCell(cell.getUpNeighbor());
-//     var down = this.getCell(cell.getDownNeighbor());
-//     var left = this.getCell(cell.getLeftNeighbor());
-//     var right = this.getCell(cell.getRightNeighbor());
-//     var neighbors = [up, down, left, right];
-//     for (var i=0; i<neighbors.length; i++) {
-//         if (neighbors[i] &&
-//             neighbors[i].marked && 
-//             (neighbors[i].color == cell.color) &&
-//             !Object.is(neighbors[i].piece, cell.piece)) {
-//             var piece = neighbors[i].getPiece();
-//             piece.emptyCells();
-//             console.log("emptying piece cells...")
-//         }
-//     }
-// }
-
 Grid.prototype.checkForFilledRows = function() {
     var rowIndices = [];
     for (var rowIndex=0; rowIndex<Config.size.height; rowIndex++) {
@@ -122,48 +96,4 @@ Grid.prototype.checkIfCellsAreMarkedOrOutOfBoard = function(coords) {
 
     return false;
 }
-
-// Grid.prototype.setAllowedMoves = function(piece, direction) {
-//     piece.resetMoves();
-
-//     for (var i=0; i<piece.currentCoordinates.length; i++) {
-//         var currentCoordinate = piece.currentCoordinates[i];
-//         var originalX = currentCoordinate[0];
-//         var originalY = currentCoordinate[1];
-//         var xLeft = originalX - 1;
-//         var xRight = originalX + 1;
-//         var yDown = originalY + 1;
-//         var xLeftCell = this.getCell([xLeft, originalY]);
-//         var xRightCell = this.getCell([xRight, originalY]);
-//         var yDownCell = this.getCell([originalX, yDown]);
-
-//         if (direction == 'down') {
-//             if (yDown >= Config.size.height || yDownCell.marked) {
-//                 piece.allowedMoves.down = false;
-//                 piece.allowedMoves.left = false;
-//                 piece.allowedMoves.right = false;
-//                 console.log('setting piece.fallen as TRUE')
-//                 piece.fallen = true;
-//                 if (this.checkIfPieceReachedTop(piece)) {
-//                     console.log("DONEE")
-//                     piece.reachedTopOfBoard = true;
-//                     clearInterval(timer);
-//                 }
-//             }
-//         }
-
-//         if (direction == 'left') {
-//             if (xLeft < 0 || xLeftCell.marked) {
-//                 piece.allowedMoves.left = false;
-//             }
-//         }
-
-//         if (direction == 'right') {
-//             if (xRight >= Config.size.width || xRightCell.marked) {
-//                 piece.allowedMoves.right = false;
-//             }
-//         }
-
-//     }
-// }
 

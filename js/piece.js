@@ -2,12 +2,16 @@
 var Piece = function(shapeOrientations, orientation, grid) {
     this.grid = grid;
     this.orientations = shapeOrientations; //all the different x,y points when the piece is first dropped;
+    
     this.currentOrientationIndex = orientation; //current orientation index;
     this.currentCoordinates = shapeOrientations[orientation]; //this will be changed as the piece is dropping;
     this.cells = []; //actual cell elements that correspond to current coordinates;
+    
     this.color = null;
     this.allowedMoves = null;
     this.resetMoves();
+    this.fallen = false;
+    this.reachedTopOfBoard = false;
 }
 
 Piece.prototype.resetMoves = function() {
@@ -23,46 +27,28 @@ Piece.prototype.colorInCells = function(color) {
     if (color) this.color = color;
     if (!color && this.color) color = this.color;
     for (var i=0; i<this.cells.length; i++) {
-        var cell = this.cells[i];
-        cell.fillColor(color);
+        this.cells[i].colorIn(color);
     }
 }
 
-Piece.prototype.emptyCells = function() {
+Piece.prototype.obliviateCells = function() {
     for (var i=0; i<this.cells.length; i++) {
-        this.cells[i].unMark(this);
+        this.cells[i].emptyColor();
     }
+
+    this.cells = [];
 }
 
-Piece.prototype.unMark = function(cell) {
-    function areArraysSame(arrayOne, arrayTwo) {
-        var same = true;
-        if (arrayOne.length !== arrayTwo.length) {
-            same = false;
-        }
-        if (arrayOne.length == arrayTwo.length) {
-            for (var i=0; i<arrayOne.length; i++) {
-                if (arrayOne[i] !== arrayTwo[i]) {
-                    same = false;
-                }
-            }
-        }
+Piece.prototype.growCells = function() {
+    this.reassignCells();
+    this.colorInCells();
+}
 
-        return same;
-    }
-
-    for (var i=0; i<this.cells.length; i++) {
-        if (Object.is(this.cells[i], cell)) {
-            console.log("FOUND same cell")
-            this.cells.splice(i, 1);
-        }
-    }
-
+Piece.prototype.reassignCells = function() {
     for (var i=0; i<this.currentCoordinates.length; i++) {
-        if (areArraysSame(this.currentCoordinates[i], [cell.x, cell.y])) {
-            console.log("FOUND same coord")
-            this.currentCoordinates.splice(i, 1);
-        }
+        var coord = this.currentCoordinates[i];
+        var cell = this.grid.getCell(coord);
+        this.cells.unshift(cell);
     }
 }
 
@@ -76,7 +62,6 @@ Piece.prototype.getNewOrientationIndex = function(currentOrientationIndex) {
 
     return orientationIndex;
 }
-
 
 Piece.prototype.getOffsetsBasedOnRotation = function(originalPosition, newPosition) {
     var offsets = [];
@@ -93,7 +78,6 @@ Piece.prototype.getOffsetsBasedOnRotation = function(originalPosition, newPositi
     return offsets;
 }
 
-
 Piece.prototype.getCoordinatesBasedOnOffsets = function(currentCoordinates, offsets) {
     var newCoordinates = [];
     for (var i=0; i<currentCoordinates.length; i++) {
@@ -107,24 +91,8 @@ Piece.prototype.getCoordinatesBasedOnOffsets = function(currentCoordinates, offs
     return newCoordinates;
 }
 
-Piece.prototype.updateCells = function(cells) {
-    this.cells = cells;
-    this.colorInCells();
-}
-
-
 //updates orientation index and current coordinates;
 Piece.prototype.getRotationCoordinates = function() {
-    var rotatedIndex;
-    var originalCordinations;
-    var rotatedCoordinations;
-    var offsets;
-    var updatedCoordinates;
-
-    for (var i = 0; i < this.cells.length; i++) {
-        this.cells[i].unMark(this.piece);
-    }
-
     var newOrientationIndex = this.getNewOrientationIndex(this.currentOrientationIndex);
     var originalCoords = this.orientations[this.currentOrientationIndex];
     var originalCoordsOfRotation = this.orientations[newOrientationIndex];
@@ -138,7 +106,6 @@ Piece.prototype.getRotationCoordinates = function() {
         this.currentOrientationIndex = newOrientationIndex;
     }
 }
-
 
 Piece.prototype.getCoordinates =  function(direction) {
     var coords = this.currentCoordinates;

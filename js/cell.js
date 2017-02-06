@@ -16,20 +16,19 @@ Cell.prototype.buildHtml = function() {
     this.el = el;
 }
 
-Cell.prototype.fillColor = function(color) {
-    this.color = color;
+Cell.prototype.colorIn = function(color) {
     this.el.setAttribute("class", "cell " + color);
+    this.color = color;
 }
 
-Cell.prototype.unMark = function(piece) {
+Cell.prototype.mark = function(piece) {
+    this.marked = true;
+    this.piece = piece;
+}
+
+Cell.prototype.emptyColor = function() {
     this.el.setAttribute("class", "cell");
     this.color = this.defaultColor;
-    this.marked = false;
-    this.piece = null;
-}
-
-Cell.prototype.mark = function() {
-    this.marked = true;
 }
 
 Cell.prototype.getUpNeighbor = function() {
@@ -50,10 +49,6 @@ Cell.prototype.getRightNeighbor = function() {
 Cell.prototype.getLeftNeighbor = function() {
     var x = this.x - 1;
     return [x, this.y];
-}
-
-Cell.prototype.updateWithPiece = function(piece) {
-    this.piece = piece;
 }
 
 Cell.prototype.getPiece = function() {

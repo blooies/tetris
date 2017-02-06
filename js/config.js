@@ -1,9 +1,9 @@
 // CONFIG
 var Config = {
-    gridName: 'grid',
+    gridName: 'inner',
     size: {
         width: 10, //10 cells across
-        height: 10 //20 cells down
+        height: 11 //20 cells down
     },
     cellDefaultColor: '#fff',
     colors: [
@@ -19,10 +19,10 @@ var Config = {
         //4 . . . . . . . . .
 
         //* 1 2 3 4 5 6 7 8 9
-        //0 . . . . . . . . .
+        //0 . . . . X X X X .
         //1 . . . . . . . . .
         //2 . . . . . . . . .
-        //3 . . . . X X X X .
+        //3 . . . . . . . . .
         //4 . . . . . . . . .
         [
             [
@@ -32,10 +32,10 @@ var Config = {
                 [5, 3]
             ],
             [
-                [8, 3],
-                [7, 3],
-                [6, 3],
-                [5, 3]
+                [5, 0],
+                [6, 0],
+                [7, 0],
+                [8, 0]
             ]
         ],
 
