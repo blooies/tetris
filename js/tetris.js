@@ -6,6 +6,10 @@
 
 //before this, i apparently do not know how to play tetris.
 
+//notes to self:
+//* have preview of next piece
+//* can configure grid size
+//* points
 
 // TETRIS
 var Tetris = function() {
