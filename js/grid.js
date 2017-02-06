@@ -38,62 +38,97 @@ Grid.prototype.getCell = function(coordinates) {
     return null;
 }
 
-Grid.prototype.checkForFilledRows = function() {
-    var rowIndices = [];
-    for (var rowIndex=0; rowIndex<Config.size.height; rowIndex++) {
-        var filledRow = this.checkForAFilledRow(rowIndex);
-        if (filledRow) {
-            // this.emptyRow(rowIndex);
-            this.rowIndices.push(rowIndex);
-        }
-    }
+// Grid.prototype.checkForFilledRows = function() {
+//     var rowIndices = [];
+//     for (var rowIndex=0; rowIndex<Config.size.height; rowIndex++) {
+//         var filledRow = this.checkForAFilledRow(rowIndex);
+//         if (filledRow) {
+//             // this.emptyRow(rowIndex);
+//             this.rowIndices.push(rowIndex);
+//         }
+//     }
 
-    return rowIndices;
-}
+//     return rowIndices;
+// }
 
-Grid.prototype.emptyRows = function(rowIndices) {
-    for (var i=0; i<rowIndices.length; i++) {
-        this.emptyRow(rowIndices[i]);
-    }
-    //clear cell color && marked && piece
-    //remove cell from piece
-    //remove current coords from piece
-}
+// Grid.prototype.emptyRows = function(rowIndices) {
+//     for (var i=0; i<rowIndices.length; i++) {
+//         this.emptyRow(rowIndices[i]);
+//     }
+//     //clear cell color && marked && piece
+//     //remove cell from piece
+//     //remove current coords from piece
+// }
+
+// Grid.prototype.emptyRow = function(rowIndex) {
+//     for (var x=0; x<Config.size.width; x++) {
+//         var coord = [x, rowIndex];
+//         var cell = this.getCell(coord);
+//         var piece = cell.piece.unMark(cell);
+//         console.log("UNMARKIGN CELL", cell)
+//         cell.unMark();
+//     }
+// }
+
+// Grid.prototype.checkForAFilledRow = function(rowIndex) {
+//     var filled = true;
+//     var y = rowIndex;
+//     for (var x=0; x<Config.size.width; x++) {
+//         var cell = this.getCell([x, y]);
+//         if (cell && !cell.marked) {
+//             filled = false;
+//         }
+//     }
+//     return filled;
+// }
 
 Grid.prototype.emptyRow = function(rowIndex) {
+    console.log("EMPTY ROW!!!")
     for (var x=0; x<Config.size.width; x++) {
         var coord = [x, rowIndex];
         var cell = this.getCell(coord);
-        var piece = cell.piece.unMark(cell);
-        console.log("UNMARKIGN CELL", cell)
+        cell.emptyColor();
         cell.unMark();
     }
 }
 
-Grid.prototype.checkForAFilledRow = function(rowIndex) {
-    var filled = true;
-    var y = rowIndex;
-    for (var x=0; x<Config.size.width; x++) {
-        var cell = this.getCell([x, y]);
-        if (cell && !cell.marked) {
-            filled = false;
+Grid.prototype.emptyFilledRows = function() {
+    var rowMapper = this.getRowsFilled();
+    console.log(rowMapper)
+    for (key in rowMapper) {
+        console.log("key in rowmapper", key)
+        if (rowMapper[key]) {
+            console.log("empty row..")
+            this.emptyRow(key);
         }
     }
-    return filled;
+}
+
+
+Grid.prototype.getRowsFilled = function() {
+    var rowMapper = {};
+    for (var y=0; y<Config.size.height; y++) {
+        rowMapper[y] = true;
+        for (var x=0; x<Config.size.height; x++) {
+            var cell = this.getCell([x, y]);
+            if (cell && !cell.marked) {
+                rowMapper[y] = false;
+            }
+        }
+    }
+    
+    return rowMapper;
 }
 
 Grid.prototype.checkIfCellsAreMarkedOrOutOfBoard = function(coords) {
     for (var i=0; i<coords.length; i++) {
         var cell = this.getCell(coords[i]);
         if (cell && cell.marked) {
-            console.log('returning true..')
             return true;
         } else if (!cell) {
-            console.log("RETURNING TRUE HERE TOOO!!!")
             return true;
         }
     }
 
     return false;
 }
-

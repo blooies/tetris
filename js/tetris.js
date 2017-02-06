@@ -65,8 +65,7 @@ Tetris.prototype.getRandomColor = function() {
 }
 
 // changes the cells in the piece based on the new direction
-Tetris.prototype.movePieceInDirection = function(direction) {
-    var piece = this.fallingPiece;
+Tetris.prototype.movePieceInDirection = function(piece, direction) {
     this.setAllowedMoves(piece, direction);
     if (piece.allowedMoves[direction]) {
         piece.obliviateCells();
@@ -145,21 +144,38 @@ Tetris.prototype.dropNewPiece = function() {
     this.generateRandomPiece(shape);
 }
 
-Tetris.prototype.movePiece = function(direction) {
-    var piece = this.fallingPiece;
+Tetris.prototype.movePiece = function(piece, direction) {
+    if (!piece) {
+        piece = this.fallingPiece;
+    }
 
     if (piece.fallen) {
         this.markCellsAsFilled(piece);
         this.fallingPiece = null;
-        var filledRows = this.grid.checkForFilledRows();
-        if (filledRows.length > 0) {
-            this.grid.emptyRows(filledRows);
-        }
+        // var filledRows = this.grid.checkForFilledRows();
+        // if (filledRows.length > 0) {
+        //     this.grid.emptyRows(filledRows);
+        // }
+        var filledRows = this.grid.emptyFilledRows();
+        // this.movePiecesDown();
         this.dropNewPiece();
     } else if (piece.reachedTopOfBoard) {
         clearInterval(timer);
     } else {
-        this.movePieceInDirection(direction);
+        console.log("PIECE", piece)
+        this.movePieceInDirection(piece, direction);
+    }
+}
+
+Tetris.prototype.movePiecesDown = function() {
+    console.log('move pieces down')
+    for (var i=0; i<this.pieces.length; i++) {
+        var piece = this.pieces[i];
+        for (var j=0; j<piece.cells.length; j++) {
+            var cell = piece.cells[j];
+            cell.unMark();
+        }
+        this.movePieceInDirection(piece, 'down');
     }
 }
 

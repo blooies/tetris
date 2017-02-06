@@ -12,6 +12,7 @@ var Piece = function(shapeOrientations, orientation, grid) {
     this.resetMoves();
     this.fallen = false;
     this.reachedTopOfBoard = false;
+    this.evaporated = false;
 }
 
 Piece.prototype.resetMoves = function() {
