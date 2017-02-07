@@ -111,6 +111,7 @@ Tetris.prototype.setAllowedMoves = function(piece, direction) {
         var yDownCell = this.grid.getCell([originalX, yDown]);
 
         if (direction == 'down') {
+            console.log("checking---", piece)
             //reached bottom of board || reached top of another piece
             if (yDown >= Config.size.height || yDownCell.marked) {
                 console.log("setting down as false for piece", piece)
@@ -148,7 +149,7 @@ Tetris.prototype.dropNewPiece = function() {
     this.generateRandomPiece(shape);
 }
 
-Tetris.prototype.movePiece = function(piece, direction) {
+Tetris.prototype.movePiece = function(piece, direction, fallenPieces) {
     if (!piece) {
         piece = this.fallingPiece;
     }
@@ -161,9 +162,14 @@ Tetris.prototype.movePiece = function(piece, direction) {
         if (filledRows.length > 0) {
             console.log("what are filled rows", filledRows);
             this.grid.emptyFilledRows(filledRows);
-            this.movePiecesDown();
+            //depending on how many rows were filled up, move all the pieces on the board by 
+            debugger;
+            this.movePiecesDown(filledRows.length);
         }
-        this.dropNewPiece();
+        if (!fallenPieces) {
+            console.log("drop enw piece...")
+            this.dropNewPiece();
+        }
     } else if (piece.reachedTopOfBoard) {
         clearInterval(timer);
     } else {
@@ -172,16 +178,20 @@ Tetris.prototype.movePiece = function(piece, direction) {
     }
 }
 
-Tetris.prototype.movePiecesDown = function() {
+Tetris.prototype.movePiecesDown = function(rowsDisappeared) {
     console.log('move pieces down')
     for (var i=0; i<this.pieces.length; i++) {
         var piece = this.pieces[i];
+        piece.fallen = false;
         for (var j=0; j<piece.cells.length; j++) {
             var cell = piece.cells[j];
-            cell.unMark();
+            // cell.unMark();
+            cell.marked = false;
         }
-        console.log("move piece", piece)
-        this.movePieceInDirection(piece, 'down');
+        for (var k=0; k<rowsDisappeared + 1; k++) {
+            console.log("CHECK HERE---move piece", piece)
+            this.movePiece(piece, 'down', true);
+        }
     }
 }
 

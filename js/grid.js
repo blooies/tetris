@@ -86,9 +86,9 @@ Grid.prototype.emptyRow = function(rowIndex) {
     console.log("EMPTY ROW!!!")
     for (var x=0; x<Config.size.width; x++) {
         var coord = [x, rowIndex];
-        console.log(coord)
         var cell = this.getCell(coord);
         //cell disappears;
+        console.log("EMPTY CELL", coord)
         cell.piece.eraseCell(cell);
         cell.emptyColor();
         cell.unMark();
