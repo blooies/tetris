@@ -20,7 +20,6 @@ EventListener.prototype.trigger = function() {
 
 EventListener.prototype.listenForKeyPresses = function(event) {
     var piece = this.tetris.fallingPiece;
-console.log('here', piece)
     if (!this.tetris.gameOver) {
         switch (event.keyCode) {
             case 37: //left

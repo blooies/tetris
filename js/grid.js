@@ -86,40 +86,38 @@ Grid.prototype.emptyRow = function(rowIndex) {
     console.log("EMPTY ROW!!!")
     for (var x=0; x<Config.size.width; x++) {
         var coord = [x, rowIndex];
+        console.log(coord)
         var cell = this.getCell(coord);
         //cell disappears;
+        cell.piece.eraseCell(cell);
         cell.emptyColor();
         cell.unMark();
-        cell.piece.eraseCell(cell);
     }
 }
 
-Grid.prototype.emptyFilledRows = function() {
-    var rowMapper = this.getRowsFilled();
-    console.log(rowMapper)
-    for (key in rowMapper) {
-        console.log("key in rowmapper", key)
-        if (rowMapper[key]) {
-            console.log("empty row..")
-            this.emptyRow(key);
-        }
+Grid.prototype.emptyFilledRows = function(rows) {
+    for (var i=0; i<rows.length; i++) {
+        this.emptyRow(rows[i].index);
     }
 }
 
 
-Grid.prototype.getRowsFilled = function() {
-    var rowMapper = {};
+Grid.prototype.getFilledRows = function() {
+    var rows = [];
     for (var y=0; y<Config.size.height; y++) {
-        rowMapper[y] = true;
+        var rowMapper = {};
+        rowMapper['index'] = y;
         for (var x=0; x<Config.size.height; x++) {
             var cell = this.getCell([x, y]);
+            console.log(x, y, cell);
             if (cell && !cell.marked) {
-                rowMapper[y] = false;
+                rowMapper['index'] = false;
             }
         }
+        if (rowMapper['index']) rows.push(rowMapper);
     }
     
-    return rowMapper;
+    return rows;
 }
 
 Grid.prototype.checkIfCellsAreMarkedOrOutOfBoard = function(coords) {

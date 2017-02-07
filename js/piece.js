@@ -59,6 +59,7 @@ Piece.prototype.eraseCell = function(cell) {
         var coord = this.currentCoordinates[i];
         if (coord[0] == cell.x &&
             coord[1] == cell.y) {
+            console.log("ERASED!!!", coord)
             this.currentCoordinates.splice(i, 1);
         }
     }

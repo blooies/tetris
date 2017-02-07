@@ -113,7 +113,7 @@ Tetris.prototype.setAllowedMoves = function(piece, direction) {
         if (direction == 'down') {
             //reached bottom of board || reached top of another piece
             if (yDown >= Config.size.height || yDownCell.marked) {
-                console.log("setting down as false")
+                console.log("setting down as false for piece", piece)
                 piece.allowedMoves.down = false;
                 piece.allowedMoves.left = false;
                 piece.allowedMoves.right = false;
@@ -157,11 +157,12 @@ Tetris.prototype.movePiece = function(piece, direction) {
         this.markCellsAsFilled(piece);
         this.fallingPiece = null;
        
-        // var filledRows = this.grid.getRowsFilled();
-        // if (filledRows.length > 0) {
-        //     this.grid.emptyFilledRows(filledRows);
-        //     this.movePiecesDown();
-        // }
+        var filledRows = this.grid.getFilledRows();
+        if (filledRows.length > 0) {
+            console.log("what are filled rows", filledRows);
+            this.grid.emptyFilledRows(filledRows);
+            this.movePiecesDown();
+        }
         this.dropNewPiece();
     } else if (piece.reachedTopOfBoard) {
         clearInterval(timer);
