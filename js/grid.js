@@ -40,7 +40,6 @@ Grid.prototype.getCell = function(coordinates) {
 
 
 Grid.prototype.emptyRow = function(rowIndex) {
-    console.log("EMPTY ROW!!!")
     for (var x=0; x<Config.size.width; x++) {
         var coord = [x, rowIndex];
         var cell = this.getCell(coord);
@@ -55,7 +54,6 @@ Grid.prototype.emptyFilledRows = function(rows) {
         this.emptyRow(rows[i].index);
     }
 }
-
 
 Grid.prototype.getFilledRows = function() {
     var rows = [];
@@ -75,7 +73,6 @@ Grid.prototype.getFilledRows = function() {
     
     return rows;
 }
-
 
 //check each cell if its "marked" and move it down 
 Grid.prototype.moveAllCellsDown = function(timesDown) {

@@ -2,17 +2,14 @@
 var Piece = function(shapeOrientations, orientation, grid) {
     this.grid = grid;
     this.orientations = shapeOrientations; //all the different x,y points when the piece is first dropped;
-    
     this.currentOrientationIndex = orientation; //current orientation index;
     this.currentCoordinates = shapeOrientations[orientation]; //this will be changed as the piece is dropping;
     this.cells = []; //actual cell elements that correspond to current coordinates;
-    
     this.color = null;
     this.allowedMoves = null;
     this.resetMoves();
     this.fallen = false;
     this.reachedTopOfBoard = false;
-    this.evaporated = false;
 }
 
 Piece.prototype.resetMoves = function() {
@@ -50,18 +47,6 @@ Piece.prototype.reassignCells = function() {
         var coord = this.currentCoordinates[i];
         var cell = this.grid.getCell(coord);
         this.cells.unshift(cell);
-    }
-}
-
-Piece.prototype.eraseCell = function(cell) {
-    var i = this.currentCoordinates.length;
-    while (i--) {
-        var coord = this.currentCoordinates[i];
-        if (coord[0] == cell.x &&
-            coord[1] == cell.y) {
-            console.log("ERASED!!!", coord)
-            this.currentCoordinates.splice(i, 1);
-        }
     }
 }
 
