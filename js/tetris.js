@@ -18,6 +18,7 @@ var Tetris = function() {
     this.grid = new Grid();
     this.eventListener = new EventListener(this);
     this.gameOver = false;
+    this.score = 0;
 }
 
 Tetris.prototype = {
@@ -149,6 +150,10 @@ Tetris.prototype.dropNewPiece = function() {
     this.generateRandomPiece(shape);
 }
 
+Tetris.prototype.updateScore = function() {
+    document.getElementById('score').innerHTML = this.score;
+}
+
 Tetris.prototype.movePiece = function(piece, direction, fallenPieces) {
     if (!piece) {
         piece = this.fallingPiece;
@@ -161,10 +166,10 @@ Tetris.prototype.movePiece = function(piece, direction, fallenPieces) {
         var filledRows = this.grid.getFilledRows();
         if (filledRows.length > 0) {
             console.log("what are filled rows", filledRows);
+            this.score += filledRows.length * 5;
+            this.updateScore();
             this.grid.emptyFilledRows(filledRows);
-            //depending on how many rows were filled up, move all the pieces on the board by 
-            debugger;
-            this.movePiecesDown(filledRows.length);
+            this.grid.moveAllCellsDown(filledRows.length);
         }
         if (!fallenPieces) {
             console.log("drop enw piece...")
@@ -178,22 +183,22 @@ Tetris.prototype.movePiece = function(piece, direction, fallenPieces) {
     }
 }
 
-Tetris.prototype.movePiecesDown = function(rowsDisappeared) {
-    console.log('move pieces down')
-    for (var i=0; i<this.pieces.length; i++) {
-        var piece = this.pieces[i];
-        piece.fallen = false;
-        for (var j=0; j<piece.cells.length; j++) {
-            var cell = piece.cells[j];
-            // cell.unMark();
-            cell.marked = false;
-        }
-        for (var k=0; k<rowsDisappeared + 1; k++) {
-            console.log("CHECK HERE---move piece", piece)
-            this.movePiece(piece, 'down', true);
-        }
-    }
-}
+// Tetris.prototype.movePiecesDown = function(rowsDisappeared) {
+//     console.log('move pieces down')
+//     for (var i=0; i<this.pieces.length; i++) {
+//         var piece = this.pieces[i];
+//         piece.fallen = false;
+//         for (var j=0; j<piece.cells.length; j++) {
+//             var cell = piece.cells[j];
+//             // cell.unMark();
+//             cell.marked = false;
+//         }
+//         for (var k=0; k<rowsDisappeared + 1; k++) {
+//             console.log("CHECK HERE---move piece", piece)
+//             this.movePiece(piece, 'down', true);
+//         }
+//     }
+// }
 
 Tetris.prototype.markCellsAsFilled = function(piece) {
     for (var i=0; i<piece.cells.length; i++) {
