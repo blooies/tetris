@@ -29,6 +29,7 @@ Tetris.prototype = {
 //start game and generate random shape and random orientation;
 Tetris.prototype.startGame = function() {
     this.grid.buildCells();
+    this.grid.buildPreview();
     var shapeOrientations = this.generateRandomShape();
     this.generateRandomPiece(shapeOrientations);
     this.eventListener.startTimer();

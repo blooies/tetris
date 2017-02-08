@@ -2,9 +2,13 @@
 var Grid = function() {
     this.width = Config.size.width;
     this.height = Config.size.height;
+    this.previewHeight = 4;
+    this.previewWidth = 6;
     this.gridName = Config.gridName;
     this.el = document.getElementById(this.gridName);
+    this.previewEl = document.getElementById('preview');
     this.cells = {};
+    this.previewCells = {};
 }
 
 Grid.prototype.buildCells = function() {
@@ -22,8 +26,27 @@ Grid.prototype.buildCells = function() {
     }
 }
 
+Grid.prototype.buildPreview = function() {
+    for (var i=0; i<this.previewHeight; i++) {
+        var y = 0;
+        for (var j=0; j<this.previewWidth; j++) {
+            var x = j;
+            var cell = new Cell(x, y);
+            this.appendPreviewCell(cell);
+            if (!this.previewCells[x]) {
+                this.previewCells[x] = {};
+            }
+            this.previewCells[x][y] = cell;
+        }
+    }
+}
+
 Grid.prototype.appendCell = function(cell) {
     this.el.appendChild(cell.el);
+}
+
+Grid.prototype.appendPreviewCell = function(cell) {
+    this.previewEl.appendChild(cell.el);
 }
 
 Grid.prototype.getCell = function(coordinates) {
@@ -37,7 +60,6 @@ Grid.prototype.getCell = function(coordinates) {
 
     return null;
 }
-
 
 Grid.prototype.emptyRow = function(rowIndex) {
     for (var x=0; x<Config.size.width; x++) {

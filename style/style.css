@@ -23,7 +23,7 @@
   height: 440px;
   border: 1px solid #cccccc; 
   position: relative;
-  overflow: hidden; }
+  display: inline-block;}
 
 .cell {
   border: 1px solid #b1c2c6;
@@ -31,6 +31,12 @@
   width: 20px;
   height: 20px; }
 
+#preview {
+  width: 100px;
+  vertical-align: top;
+  display: inline-block;
+  margin-left: 20px;
+}
 /*#inner {*/
   /*height: 55%;*/
   /*position: absolute;*/
