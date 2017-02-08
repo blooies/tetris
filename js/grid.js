@@ -89,7 +89,7 @@ Grid.prototype.emptyRow = function(rowIndex) {
         var cell = this.getCell(coord);
         //cell disappears;
         console.log("EMPTY CELL", coord)
-        cell.piece.eraseCell(cell);
+        // cell.piece.eraseCell(cell);
         cell.emptyColor();
         cell.unMark();
     }
@@ -114,10 +114,31 @@ Grid.prototype.getFilledRows = function() {
                 rowMapper['index'] = false;
             }
         }
+        console.log(rowMapper)
         if (rowMapper['index']) rows.push(rowMapper);
     }
     
     return rows;
+}
+
+
+//check each cell if its "marked" and move it down 
+Grid.prototype.moveAllCellsDown = function(timesDown) {
+    for (xIndex in tetris.grid.cells) {
+        var column = tetris.grid.cells[xIndex];
+        var i = Config.size.height;
+        while (i--) {
+            //get the last cell in this column;
+            var cell = column[i];
+            if (cell.defaultColor !== cell.color) {
+                var downCell = column[i + timesDown];
+                downCell.colorIn(cell.color);
+                cell.colorIn(cell.defaultColor);
+                cell.marked = false;
+                downCell.marked = true;
+            }
+        }
+    }
 }
 
 Grid.prototype.checkIfCellsAreMarkedOrOutOfBoard = function(coords) {
