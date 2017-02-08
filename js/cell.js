@@ -4,7 +4,6 @@ var Cell = function(x, y) {
     this.defaultColor = Config.cellDefaultColor;
     this.color = Config.cellDefaultColor;
     this.el = null;
-    this.piece = null;
     this.marked = false;
     this.buildHtml();
 }
@@ -22,12 +21,10 @@ Cell.prototype.colorIn = function(color) {
 
 Cell.prototype.mark = function(piece) {
     this.marked = true;
-    this.piece = piece;
 }
 
 Cell.prototype.unMark = function() {
     this.marked = false;
-    this.piece = null;
 }
 
 Cell.prototype.emptyColor = function() {

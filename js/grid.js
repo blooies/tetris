@@ -38,49 +38,6 @@ Grid.prototype.getCell = function(coordinates) {
     return null;
 }
 
-// Grid.prototype.checkForFilledRows = function() {
-//     var rowIndices = [];
-//     for (var rowIndex=0; rowIndex<Config.size.height; rowIndex++) {
-//         var filledRow = this.checkForAFilledRow(rowIndex);
-//         if (filledRow) {
-//             // this.emptyRow(rowIndex);
-//             this.rowIndices.push(rowIndex);
-//         }
-//     }
-
-//     return rowIndices;
-// }
-
-// Grid.prototype.emptyRows = function(rowIndices) {
-//     for (var i=0; i<rowIndices.length; i++) {
-//         this.emptyRow(rowIndices[i]);
-//     }
-//     //clear cell color && marked && piece
-//     //remove cell from piece
-//     //remove current coords from piece
-// }
-
-// Grid.prototype.emptyRow = function(rowIndex) {
-//     for (var x=0; x<Config.size.width; x++) {
-//         var coord = [x, rowIndex];
-//         var cell = this.getCell(coord);
-//         var piece = cell.piece.unMark(cell);
-//         console.log("UNMARKIGN CELL", cell)
-//         cell.unMark();
-//     }
-// }
-
-// Grid.prototype.checkForAFilledRow = function(rowIndex) {
-//     var filled = true;
-//     var y = rowIndex;
-//     for (var x=0; x<Config.size.width; x++) {
-//         var cell = this.getCell([x, y]);
-//         if (cell && !cell.marked) {
-//             filled = false;
-//         }
-//     }
-//     return filled;
-// }
 
 Grid.prototype.emptyRow = function(rowIndex) {
     console.log("EMPTY ROW!!!")
@@ -88,8 +45,6 @@ Grid.prototype.emptyRow = function(rowIndex) {
         var coord = [x, rowIndex];
         var cell = this.getCell(coord);
         //cell disappears;
-        console.log("EMPTY CELL", coord)
-        cell.piece.eraseCell(cell);
         cell.emptyColor();
         cell.unMark();
     }
