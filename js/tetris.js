@@ -14,7 +14,6 @@
 // TETRIS
 var Tetris = function() {
     this.fallingPiece = null;
-    this.pieces = [];
     this.grid = new Grid();
     this.eventListener = new EventListener(this);
     this.gameOver = false;
@@ -49,7 +48,6 @@ Tetris.prototype.generateRandomPiece = function(shapeOrientations) {
     var randomOrientation = this.getRandomNumber(shapeOrientations.length);
     var piece = new Piece(shapeOrientations, randomOrientation, this.grid);
     this.fallingPiece = piece;
-    this.pieces.push(piece);
     piece.reassignCells();
     var color = this.getRandomColor();
     piece.colorInCells(color);
@@ -178,27 +176,10 @@ Tetris.prototype.movePiece = function(piece, direction, fallenPieces) {
     } else if (piece.reachedTopOfBoard) {
         clearInterval(timer);
     } else {
-        // console.log("PIECE", piece)
         this.movePieceInDirection(piece, direction);
     }
 }
 
-// Tetris.prototype.movePiecesDown = function(rowsDisappeared) {
-//     console.log('move pieces down')
-//     for (var i=0; i<this.pieces.length; i++) {
-//         var piece = this.pieces[i];
-//         piece.fallen = false;
-//         for (var j=0; j<piece.cells.length; j++) {
-//             var cell = piece.cells[j];
-//             // cell.unMark();
-//             cell.marked = false;
-//         }
-//         for (var k=0; k<rowsDisappeared + 1; k++) {
-//             console.log("CHECK HERE---move piece", piece)
-//             this.movePiece(piece, 'down', true);
-//         }
-//     }
-// }
 
 Tetris.prototype.markCellsAsFilled = function(piece) {
     for (var i=0; i<piece.cells.length; i++) {
