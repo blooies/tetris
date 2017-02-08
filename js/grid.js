@@ -62,12 +62,10 @@ Grid.prototype.getFilledRows = function() {
         rowMapper['index'] = y;
         for (var x=0; x<Config.size.height; x++) {
             var cell = this.getCell([x, y]);
-            console.log(x, y, cell);
             if (cell && !cell.marked) {
                 rowMapper['index'] = false;
             }
         }
-        console.log(rowMapper)
         if (rowMapper['index']) rows.push(rowMapper);
     }
     
