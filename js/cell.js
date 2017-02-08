@@ -19,7 +19,7 @@ Cell.prototype.colorIn = function(color) {
     this.color = color;
 }
 
-Cell.prototype.mark = function(piece) {
+Cell.prototype.mark = function() {
     this.marked = true;
 }
 
@@ -50,8 +50,4 @@ Cell.prototype.getRightNeighbor = function() {
 Cell.prototype.getLeftNeighbor = function() {
     var x = this.x - 1;
     return [x, this.y];
-}
-
-Cell.prototype.getPiece = function() {
-    return this.piece;
 }

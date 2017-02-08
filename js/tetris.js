@@ -110,10 +110,8 @@ Tetris.prototype.setAllowedMoves = function(piece, direction) {
         var yDownCell = this.grid.getCell([originalX, yDown]);
 
         if (direction == 'down') {
-            console.log("checking---", piece)
             //reached bottom of board || reached top of another piece
             if (yDown >= Config.size.height || yDownCell.marked) {
-                console.log("setting down as false for piece", piece)
                 piece.allowedMoves.down = false;
                 piece.allowedMoves.left = false;
                 piece.allowedMoves.right = false;
@@ -152,38 +150,23 @@ Tetris.prototype.updateScore = function() {
     document.getElementById('score').innerHTML = this.score;
 }
 
-Tetris.prototype.movePiece = function(piece, direction, fallenPieces) {
+Tetris.prototype.movePiece = function(piece, direction) {
     if (!piece) {
         piece = this.fallingPiece;
     }
-
     if (piece.fallen) {
-        this.markCellsAsFilled(piece);
         this.fallingPiece = null;
-       
         var filledRows = this.grid.getFilledRows();
         if (filledRows.length > 0) {
-            console.log("what are filled rows", filledRows);
             this.score += filledRows.length * 5;
             this.updateScore();
             this.grid.emptyFilledRows(filledRows);
             this.grid.moveAllCellsDown(filledRows.length);
         }
-        if (!fallenPieces) {
-            console.log("drop enw piece...")
-            this.dropNewPiece();
-        }
+        this.dropNewPiece();
     } else if (piece.reachedTopOfBoard) {
         clearInterval(timer);
     } else {
         this.movePieceInDirection(piece, direction);
-    }
-}
-
-
-Tetris.prototype.markCellsAsFilled = function(piece) {
-    for (var i=0; i<piece.cells.length; i++) {
-        var cell = piece.cells[i];
-        cell.mark(piece);
     }
 }
