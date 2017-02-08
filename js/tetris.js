@@ -86,6 +86,7 @@ Tetris.prototype.checkIfPieceIsOnTopOfBoard = function(piece) {
     for (var i=0; i<cells.length; i++) {
         var cell = cells[i];
         if (cell.y <= 1) {
+            console.log(cell)
             document.getElementById('message').innerHTML = 'GAME OVER';
             piece.reachedTopOfBoard = true;
             return true;
@@ -111,6 +112,7 @@ Tetris.prototype.setAllowedMoves = function(piece, direction) {
         if (direction == 'down') {
             //reached bottom of board || reached top of another piece
             if (yDown >= Config.size.height || yDownCell.marked) {
+                console.log("setting down as false for piece", piece)
                 piece.allowedMoves.down = false;
                 piece.allowedMoves.left = false;
                 piece.allowedMoves.right = false;
@@ -154,6 +156,7 @@ Tetris.prototype.movePiece = function(piece, direction) {
         piece = this.fallingPiece;
     }
     if (piece.fallen) {
+        this.markCellsAsFilled(piece);
         this.fallingPiece = null;
         var filledRows = this.grid.getFilledRows();
         if (filledRows.length > 0) {
@@ -167,5 +170,13 @@ Tetris.prototype.movePiece = function(piece, direction) {
         clearInterval(timer);
     } else {
         this.movePieceInDirection(piece, direction);
+    }
+}
+
+
+Tetris.prototype.markCellsAsFilled = function(piece) {
+    for (var i=0; i<piece.cells.length; i++) {
+        var cell = piece.cells[i];
+        cell.mark();
     }
 }
