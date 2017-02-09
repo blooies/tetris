@@ -22,8 +22,8 @@ Piece.prototype.resetMoves = function() {
 }
 
 Piece.prototype.colorInCells = function(color) {
-    if (color) this.color = color;
-    if (!color && this.color) color = this.color;
+    var color = this.color ? this.color : color;
+
     for (var i=0; i<this.cells.length; i++) {
         this.cells[i].colorIn(color);
     }

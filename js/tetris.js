@@ -30,8 +30,8 @@ Tetris.prototype = {
 Tetris.prototype.startGame = function() {
     this.grid.buildCells();
     this.grid.buildPreview();
-    var shapeOrientations = this.generateRandomShape();
-    this.generateRandomPiece(shapeOrientations);
+    var piece = this.generateRandomPiece();
+    this.showPiece(piece);
     this.eventListener.startTimer();
 }
 
@@ -45,13 +45,19 @@ Tetris.prototype.getRandomNumber = function(notIncluding) {
     return Math.floor(Math.random() * notIncluding);
 }
 
-Tetris.prototype.generateRandomPiece = function(shapeOrientations) {
+Tetris.prototype.generateRandomPiece = function() {
+    var shapeOrientations = this.generateRandomShape();
     var randomOrientation = this.getRandomNumber(shapeOrientations.length);
     var piece = new Piece(shapeOrientations, randomOrientation, this.grid);
+    var color = this.getRandomColor();
+    piece.color = color;
+    return piece;
+}
+
+Tetris.prototype.showPiece = function(piece) {
     this.fallingPiece = piece;
     piece.reassignCells();
-    var color = this.getRandomColor();
-    piece.colorInCells(color);
+    piece.colorInCells();
 }
 
 Tetris.prototype.assignCellsToPiece = function(piece) {
@@ -143,10 +149,10 @@ Tetris.prototype.setAllowedMoves = function(piece, direction) {
     }
 }
 
-Tetris.prototype.dropNewPiece = function() {
-    var shape = this.generateRandomShape();
-    this.generateRandomPiece(shape);
-}
+// Tetris.prototype.dropNewPiece = function() {
+//     var shape = this.generateRandomShape();
+//     this.generateRandomPiece(shape);
+// }
 
 Tetris.prototype.updateScore = function() {
     document.getElementById('score').innerHTML = this.score;
@@ -166,7 +172,8 @@ Tetris.prototype.movePiece = function(piece, direction) {
             this.grid.emptyFilledRows(filledRows);
             this.grid.moveAllCellsDown(filledRows.length);
         }
-        this.dropNewPiece();
+        var newPiece = this.generateRandomPiece();
+        this.showPiece(newPiece);
     } else if (piece.reachedTopOfBoard) {
         clearInterval(timer);
     } else {
