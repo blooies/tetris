@@ -49,12 +49,16 @@ Grid.prototype.appendPreviewCell = function(cell) {
     this.previewEl.appendChild(cell.el);
 }
 
-Grid.prototype.getCell = function(coordinates) {
+
+
+Grid.prototype.getCell = function(params) {
+    var coordinates = params.coordinates;
+    var typeOfCell = params.cells;
     var x = coordinates[0];
     var y = coordinates[1];
 
     if (x >= 0 && x <= Config.size.width - 1 && y <= Config.size.height - 1) {
-        var cell = this.cells[x][y];
+        var cell = this[typeOfCell][x][y];
         return cell;
     }
 
@@ -64,7 +68,10 @@ Grid.prototype.getCell = function(coordinates) {
 Grid.prototype.emptyRow = function(rowIndex) {
     for (var x=0; x<Config.size.width; x++) {
         var coord = [x, rowIndex];
-        var cell = this.getCell(coord);
+        var cell = this.getCell({
+            coordinates: coord,
+            cells: 'cells'
+        });
         //cell disappears;
         cell.emptyColor();
         cell.unMark();
@@ -83,7 +90,10 @@ Grid.prototype.getFilledRows = function() {
         var rowMapper = {};
         rowMapper['index'] = y;
         for (var x=0; x<Config.size.height; x++) {
-            var cell = this.getCell([x, y]);
+            var cell = this.getCell({
+                coordinates: [x, y],
+                cells: 'cells'
+            });
             if (cell && !cell.marked) {
                 rowMapper['index'] = false;
             }
@@ -115,7 +125,10 @@ Grid.prototype.moveAllCellsDown = function(timesDown) {
 
 Grid.prototype.checkIfCellsAreMarkedOrOutOfBoard = function(coords) {
     for (var i=0; i<coords.length; i++) {
-        var cell = this.getCell(coords[i]);
+        var cell = this.getCell({
+            coordinates: coords[i],
+            cells: 'cells'
+        });
         if (cell && cell.marked) {
             return true;
         } else if (!cell) {

@@ -18,6 +18,7 @@ var Tetris = function() {
     this.eventListener = new EventListener(this);
     this.gameOver = false;
     this.score = 0;
+    this.pieces = [];
 }
 
 Tetris.prototype = {
@@ -32,6 +33,10 @@ Tetris.prototype.startGame = function() {
     this.grid.buildPreview();
     var piece = this.generateRandomPiece();
     this.showPiece(piece);
+
+    var nextPiece = this.generateRandomPiece();
+    this.pieces.push(nextPiece);
+
     this.eventListener.startTimer();
 }
 
@@ -63,7 +68,10 @@ Tetris.prototype.showPiece = function(piece) {
 Tetris.prototype.assignCellsToPiece = function(piece) {
     var coords = piece.currentCoordinates;
     for (var i = 0; i < coords.length; i++) {
-        var cell = this.grid.getCell(coords[i]);
+        var cell = this.grid.getCell({
+            coordinates: coords[i],
+            cells: 'cells'
+        });
         piece.cells.unshift(cell);
     }
 }
@@ -112,9 +120,18 @@ Tetris.prototype.setAllowedMoves = function(piece, direction) {
         var xLeft = originalX - 1;
         var xRight = originalX + 1;
         var yDown = originalY + 1;
-        var xLeftCell = this.grid.getCell([xLeft, originalY]);
-        var xRightCell = this.grid.getCell([xRight, originalY]);
-        var yDownCell = this.grid.getCell([originalX, yDown]);
+        var xLeftCell = this.grid.getCell({
+            coordinates: [xLeft, originalY],
+            cells: 'cells'
+        });
+        var xRightCell = this.grid.getCell({
+            coordinates: [xRight, originalY],
+            cells: 'cells'
+        });
+        var yDownCell = this.grid.getCell({
+            coordinates: [originalX, yDown],
+            cells: 'cells'
+        });
 
         if (direction == 'down') {
             //reached bottom of board || reached top of another piece
