@@ -149,11 +149,6 @@ Tetris.prototype.setAllowedMoves = function(piece, direction) {
     }
 }
 
-// Tetris.prototype.dropNewPiece = function() {
-//     var shape = this.generateRandomShape();
-//     this.generateRandomPiece(shape);
-// }
-
 Tetris.prototype.updateScore = function() {
     document.getElementById('score').innerHTML = this.score;
 }
@@ -180,7 +175,6 @@ Tetris.prototype.movePiece = function(piece, direction) {
         this.movePieceInDirection(piece, direction);
     }
 }
-
 
 Tetris.prototype.markCellsAsFilled = function(piece) {
     for (var i=0; i<piece.cells.length; i++) {
