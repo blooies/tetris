@@ -23,7 +23,7 @@
   height: 440px;
   border: 1px solid #cccccc; 
   position: relative;
-  display: inline-block;}
+  display: inline-block; }
 
 .cell {
   border: 1px solid #b1c2c6;
@@ -35,19 +35,13 @@
   width: 220px;
   height: 440px;
   display: inline-block;
-  margin-left: -65px;
-}
+  margin-left: -65px; }
 
 #preview-container {
   display: inline-block;
   vertical-align: top;
   height: 111px;
   overflow: hidden;
-  width: 134px;
-}
-/*#inner {*/
-  /*height: 55%;*/
-  /*position: absolute;*/
-  /*top: -22px; }*/
+  width: 134px; }
 
 /*# sourceMappingURL=style.css.map */
