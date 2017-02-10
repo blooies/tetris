@@ -38,16 +38,19 @@ Piece.prototype.obliviateCells = function() {
 }
 
 Piece.prototype.growCells = function() {
-    this.reassignCells();
+    this.reassignCells(({
+        cells: 'cells'
+    }));
     this.colorInCells();
 }
 
-Piece.prototype.reassignCells = function() {
+Piece.prototype.reassignCells = function(params) {
+    var cells = params.cells;
     for (var i=0; i<this.currentCoordinates.length; i++) {
         var coord = this.currentCoordinates[i];
         var cell = this.grid.getCell({
             coordinates: coord,
-            cells: 'cells'
+            cells: cells
         });
         this.cells.unshift(cell);
     }
