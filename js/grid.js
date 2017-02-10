@@ -25,7 +25,7 @@ Grid.prototype.buildCells = function() {
 }
 
 Grid.prototype.buildPreview = function() {
-    for (var i=0; i<this.height; i++) {
+    for (var i=0; i<this.height/2; i++) {
         var y = i;
         for (var j=0; j<this.width; j++) {
             var x = j;
@@ -70,9 +70,6 @@ Grid.prototype.emptyRow = function(rowIndex) {
             coordinates: coord,
             cells: 'cells'
         });
-        //cell disappears;
-        // cell.emptyColor();
-        // cell.unMark();
         cell.unMark();
     }
 }
