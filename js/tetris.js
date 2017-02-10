@@ -7,6 +7,7 @@
 //before this, i apparently do not know how to play tetris.
 
 //notes to self:
+//* REFACTOR ****
 //* have preview of next piece (DONE)
 //* can configure grid size
 //* points (DONE)
@@ -37,16 +38,13 @@ Tetris.prototype.startGame = function() {
     this.grid.buildPreview();
     var piece = this.generateRandomPiece();
     this.showPiece(piece);
-
-    var nextPiece = this.generateRandomPiece();
-    this.pieces.push(nextPiece);
-    this.showPreviewPiece(nextPiece);
-
+    this.showPreviewPiece();
     this.eventListener.startTimer();
 }
 
-
-Tetris.prototype.showPreviewPiece = function(piece) {
+Tetris.prototype.showPreviewPiece = function() {
+    var piece = this.generateRandomPiece();
+    this.pieces.push(piece);
     piece.reassignCells({
         cells: 'previewCells'
     });
@@ -213,11 +211,8 @@ Tetris.prototype.movePiece = function(piece, direction) {
         var newPiece = this.pieces.shift();
         newPiece.cells = [];
         this.showPiece(newPiece);
-
         this.clearPreview();
-        var nextPiece = this.generateRandomPiece();
-        this.pieces.push(nextPiece);
-        this.showPreviewPiece(nextPiece);
+        this.showPreviewPiece();
     } else if (piece.reachedTopOfBoard) {
         clearInterval(timer);
     } else {
