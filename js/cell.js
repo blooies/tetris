@@ -25,9 +25,6 @@ Cell.prototype.mark = function() {
 
 Cell.prototype.unMark = function() {
     this.marked = false;
-}
-
-Cell.prototype.emptyColor = function() {
     this.el.setAttribute("class", "cell");
     this.color = this.defaultColor;
 }

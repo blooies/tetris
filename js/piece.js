@@ -31,7 +31,7 @@ Piece.prototype.colorInCells = function(color) {
 
 Piece.prototype.obliviateCells = function() {
     for (var i=0; i<this.cells.length; i++) {
-        this.cells[i].emptyColor();
+        this.cells[i].unMark();
     }
 
     this.cells = [];

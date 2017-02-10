@@ -54,12 +54,10 @@ Tetris.prototype.showPreviewPiece = function() {
 Tetris.prototype.clearPreview = function() {
     var cells = this.grid.previewCells;
     for (columnIndex in cells) {
-        var column = cells[columnIndex]
+        var column = cells[columnIndex];
         for (cellIndex in column) {
              var cell = column[cellIndex];
              cell.unMark();
-             console.log("CLALING EMPTY COLOR")
-             cell.emptyColor();
         }
     }
 }

@@ -71,7 +71,8 @@ Grid.prototype.emptyRow = function(rowIndex) {
             cells: 'cells'
         });
         //cell disappears;
-        cell.emptyColor();
+        // cell.emptyColor();
+        // cell.unMark();
         cell.unMark();
     }
 }
