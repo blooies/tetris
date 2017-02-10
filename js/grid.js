@@ -99,9 +99,9 @@ Grid.prototype.getFilledRows = function() {
 }
 
 //check each cell if its "marked" and move it down 
-Grid.prototype.moveAllCellsDown = function(timesDown) {
-    for (xIndex in tetris.grid.cells) {
-        var column = tetris.grid.cells[xIndex];
+Grid.prototype.moveAllCellsDown = function(filledRows) {
+    for (xIndex in this.cells) {
+        var column = this.cells[xIndex];
         var i = Config.size.height;
         while (i--) {
             //get the last cell in this column;
