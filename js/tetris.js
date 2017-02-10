@@ -203,7 +203,7 @@ Tetris.prototype.movePiece = function(piece, direction) {
             this.score += filledRows.length * 5;
             this.updateScore();
             this.grid.emptyFilledRows(filledRows);
-            this.grid.moveAllCellsDown(filledRows.length);
+            this.grid.moveAllCellsDown(filledRows);
         }
         var newPiece = this.pieces.shift();
         newPiece.cells = [];

@@ -74,7 +74,7 @@ Grid.prototype.emptyRow = function(rowIndex) {
 
 Grid.prototype.emptyFilledRows = function(rows) {
     for (var i=0; i<rows.length; i++) {
-        this.emptyRow(rows[i].index);
+        this.emptyRow(rows[i]);
     }
 }
 
@@ -92,7 +92,7 @@ Grid.prototype.getFilledRows = function() {
                 rowMapper['index'] = false;
             }
         }
-        if (rowMapper['index']) rows.push(rowMapper);
+        if (rowMapper['index']) rows.push(rowMapper['index']);
     }
     
     return rows;
@@ -106,8 +106,15 @@ Grid.prototype.moveAllCellsDown = function(filledRows) {
         while (i--) {
             //get the last cell in this column;
             var cell = column[i];
+            var y = cell['y'];
             if (cell.defaultColor !== cell.color) {
-                var downCell = column[i + timesDown];
+                var filledRowsBelowCell = 0;
+                for (var j=0; j<filledRows.length; j++) {
+                    if (y < filledRows[j]) {
+                        filledRowsBelowCell += 1;
+                    }
+                }
+                var downCell = column[i + filledRowsBelowCell];
                 if (downCell) {
                     downCell.colorIn(cell.color);
                     downCell.mark();
