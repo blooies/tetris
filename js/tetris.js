@@ -7,9 +7,13 @@
 //before this, i apparently do not know how to play tetris.
 
 //notes to self:
-//* have preview of next piece
+//* have preview of next piece (DONE)
 //* can configure grid size
-//* points
+//* points (DONE)
+//* hard drop
+//* preview on bottoms
+//* nice styling
+//* fall down bug
 
 // TETRIS
 var Tetris = function() {
@@ -36,8 +40,30 @@ Tetris.prototype.startGame = function() {
 
     var nextPiece = this.generateRandomPiece();
     this.pieces.push(nextPiece);
+    this.showPreviewPiece(nextPiece);
 
     this.eventListener.startTimer();
+}
+
+
+Tetris.prototype.showPreviewPiece = function(piece) {
+    piece.reassignCells({
+        cells: 'previewCells'
+    });
+    piece.colorInCells();
+}
+
+Tetris.prototype.clearPreview = function() {
+    var cells = this.grid.previewCells;
+    for (columnIndex in cells) {
+        var column = cells[columnIndex]
+        for (cellIndex in column) {
+             var cell = column[cellIndex];
+             cell.unMark();
+             console.log("CLALING EMPTY COLOR")
+             cell.emptyColor();
+        }
+    }
 }
 
 Tetris.prototype.generateRandomShape = function() {
@@ -61,7 +87,7 @@ Tetris.prototype.generateRandomPiece = function() {
 
 Tetris.prototype.showPiece = function(piece) {
     this.fallingPiece = piece;
-    piece.reassignCells();
+    piece.reassignCells({cells: 'cells'});
     piece.colorInCells();
 }
 
@@ -184,8 +210,14 @@ Tetris.prototype.movePiece = function(piece, direction) {
             this.grid.emptyFilledRows(filledRows);
             this.grid.moveAllCellsDown(filledRows.length);
         }
-        var newPiece = this.generateRandomPiece();
+        var newPiece = this.pieces.shift();
+        newPiece.cells = [];
         this.showPiece(newPiece);
+
+        this.clearPreview();
+        var nextPiece = this.generateRandomPiece();
+        this.pieces.push(nextPiece);
+        this.showPreviewPiece(nextPiece);
     } else if (piece.reachedTopOfBoard) {
         clearInterval(timer);
     } else {
