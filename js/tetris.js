@@ -11,10 +11,10 @@
 //* have preview of next piece (DONE)
 //* can configure grid size
 //* points (DONE)
-//* hard drop
+//* hard drop ****
 //* preview on bottoms
-//* nice styling
-//* fall down bug
+//* nice styling (DONE)
+//* fall down bug ****
 
 // TETRIS
 var Tetris = function() {
