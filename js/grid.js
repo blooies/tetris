@@ -47,8 +47,6 @@ Grid.prototype.appendPreviewCell = function(cell) {
     this.previewEl.appendChild(cell.el);
 }
 
-
-
 Grid.prototype.getCell = function(params) {
     var coordinates = params.coordinates;
     var typeOfCell = params.cells;
@@ -112,9 +110,8 @@ Grid.prototype.moveAllCellsDown = function(timesDown) {
                 var downCell = column[i + timesDown];
                 if (downCell) {
                     downCell.colorIn(cell.color);
-                    cell.colorIn(cell.defaultColor);
-                    cell.marked = false;
-                    downCell.marked = true;
+                    downCell.mark();
+                    cell.unMark();
                 }
             }
         }
