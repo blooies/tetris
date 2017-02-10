@@ -32,10 +32,18 @@
   height: 20px; }
 
 #preview {
-  width: 100px;
-  vertical-align: top;
+  width: 220px;
+  height: 440px;
   display: inline-block;
-  margin-left: 20px;
+  margin-left: -65px;
+}
+
+#preview-container {
+  display: inline-block;
+  vertical-align: top;
+  height: 111px;
+  overflow: hidden;
+  width: 134px;
 }
 /*#inner {*/
   /*height: 55%;*/
