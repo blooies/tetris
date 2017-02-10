@@ -2,8 +2,8 @@
 var Grid = function() {
     this.width = Config.size.width;
     this.height = Config.size.height;
-    this.previewHeight = 4;
-    this.previewWidth = 6;
+    this.previewHeight = Config.size.height;
+    this.previewWidth = Config.size.width;
     this.gridName = Config.gridName;
     this.el = document.getElementById(this.gridName);
     this.previewEl = document.getElementById('preview');
@@ -28,7 +28,7 @@ Grid.prototype.buildCells = function() {
 
 Grid.prototype.buildPreview = function() {
     for (var i=0; i<this.previewHeight; i++) {
-        var y = 0;
+        var y = i;
         for (var j=0; j<this.previewWidth; j++) {
             var x = j;
             var cell = new Cell(x, y);
@@ -114,10 +114,12 @@ Grid.prototype.moveAllCellsDown = function(timesDown) {
             var cell = column[i];
             if (cell.defaultColor !== cell.color) {
                 var downCell = column[i + timesDown];
-                downCell.colorIn(cell.color);
-                cell.colorIn(cell.defaultColor);
-                cell.marked = false;
-                downCell.marked = true;
+                if (downCell) {
+                    downCell.colorIn(cell.color);
+                    cell.colorIn(cell.defaultColor);
+                    cell.marked = false;
+                    downCell.marked = true;
+                }
             }
         }
     }
