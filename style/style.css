@@ -1,3 +1,23 @@
+body {
+  font-family: 'Josefin Slab';
+}
+
+h2 {
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  font-size: 28px;
+  margin-left: 10%;
+  margin-bottom: 30px;
+  margin-top: 15px;
+}
+
+#message p {
+  margin-top: -30px;
+  margin-bottom: 20px;
+  margin-left: 12%;
+  font-size: 13px;
+}
+
 .color1 {
   background-color: #c98888;
   border: 1px solid #a24949; }
@@ -38,10 +58,22 @@
   margin-left: -65px; }
 
 #preview-container {
-  display: inline-block;
-  vertical-align: top;
   height: 111px;
   overflow: hidden;
   width: 134px; }
+
+#right-container {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 20px;
+}
+
+#score {
+  margin-top: 20px;
+  text-align: center;
+  padding: 40px 20px;
+  border: 2px solid #b1c2c6;
+  font-size: 30px;
+}
 
 /*# sourceMappingURL=style.css.map */

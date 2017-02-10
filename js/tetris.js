@@ -123,7 +123,7 @@ Tetris.prototype.checkIfPieceIsOnTopOfBoard = function(piece) {
     for (var i=0; i<cells.length; i++) {
         var cell = cells[i];
         if (cell.y < 1) {
-            document.getElementById('message').innerHTML = 'GAME OVER';
+            document.getElementById('message').innerHTML = '<p>GAME OVER</p>';
             piece.reachedTopOfBoard = true;
             return true;
         } 
