@@ -43,6 +43,10 @@ EventListener.prototype.listenForKeyPresses = function(event) {
                     this.paused = true;
                 }
                 break;
+            case 68:
+                while (!piece.fallen) {
+                   this.tetris.movePiece(piece, 'down');
+                }
         }
     }
 }
