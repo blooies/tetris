@@ -190,8 +190,6 @@ Tetris.prototype.removeOpacity = function(piece) {
 }
 
 Tetris.prototype.movePiece = function(piece, direction) {
-    this.showShadow(piece);
-
     if (!piece) {
         piece = this.fallingPiece;
     }
