@@ -48,3 +48,13 @@ Cell.prototype.getLeftNeighbor = function() {
     var x = this.x - 1;
     return [x, this.y];
 }
+
+Cell.prototype.highlight = function(color) {
+    this.el.classList.add('highlight');
+    this.el.classList.add(color);
+}
+
+Cell.prototype.removeHighlight = function(color) {
+    this.el.classList.remove('highlight');
+    this.el.classList.remove(color);
+}
