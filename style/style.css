@@ -76,4 +76,12 @@ h2 {
   font-size: 30px;
 }
 
+.highlight {
+  opacity: .45;
+}
+
+.marked {
+  opacity: 1 !important;
+}
+
 /*# sourceMappingURL=style.css.map */
