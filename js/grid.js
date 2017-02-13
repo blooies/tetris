@@ -86,17 +86,17 @@ Grid.prototype.getFilledRows = function() {
     var rows = [];
     for (var y=0; y<Config.size.height; y++) {
         var rowMapper = {};
-        rowMapper['index'] = y;
+        rowMapper[y] = true;
         for (var x=0; x<Config.size.height; x++) {
             var cell = this.getCell({
                 coordinates: [x, y],
                 cells: 'cells'
             });
             if (cell && !cell.marked) {
-                rowMapper['index'] = false;
+                rowMapper[y] = false;
             }
         }
-        if (rowMapper['index']) rows.push(rowMapper['index']);
+        if (rowMapper[y]) rows.push(y);
     }
     
     return rows;
