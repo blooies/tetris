@@ -3,6 +3,7 @@ var Grid = function() {
     this.width = Config.size.width;
     this.height = Config.size.height;
     this.gridName = Config.gridName;
+    this.previewName = Config.previewName;
     this.el = document.getElementById(this.gridName);
     this.previewEl = document.getElementById(this.previewName);
     this.cells = {};
