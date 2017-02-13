@@ -217,6 +217,40 @@ Tetris.prototype.movePiece = function(piece, direction) {
     }
 }
 
+// iterate through current cells;
+// can go down? go down
+// can go down? go down
+// until cannot go down
+// then highlight those cells;
+Tetris.prototype.canShadowMoveDown= function(coords) {
+    for (var i=0; i<coords.length; i++) {
+        var currentCoordinate = coords[i];
+        var originalX = currentCoordinate[0];
+        var originalY = currentCoordinate[1];
+        var xLeft = originalX - 1;
+        var xRight = originalX + 1;
+        var yDown = originalY + 1;
+        var xLeftCell = this.grid.getCell({
+            coordinates: [xLeft, originalY],
+            cells: 'cells'
+        });
+        var xRightCell = this.grid.getCell({
+            coordinates: [xRight, originalY],
+            cells: 'cells'
+        });
+        var yDownCell = this.grid.getCell({
+            coordinates: [originalX, yDown],
+            cells: 'cells'
+        });
+
+        if (yDown >= Config.size.height || yDownCell.marked) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 Tetris.prototype.markCellsAsFilled = function(piece) {
     for (var i=0; i<piece.cells.length; i++) {
         var cell = piece.cells[i];
