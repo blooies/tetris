@@ -3,7 +3,7 @@ var Config = {
     gridName: 'inner-grid',
     size: {
         width: 10, //10 cells across
-        height: 10 //20 cells down
+        height: 20 //20 cells down
     },
     cellDefaultColor: '#fff',
     colors: [
