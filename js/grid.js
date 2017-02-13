@@ -4,7 +4,7 @@ var Grid = function() {
     this.height = Config.size.height;
     this.gridName = Config.gridName;
     this.el = document.getElementById(this.gridName);
-    this.previewEl = document.getElementById('preview');
+    this.previewEl = document.getElementById(this.previewName);
     this.cells = {};
     this.previewCells = {};
 }

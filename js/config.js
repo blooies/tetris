@@ -1,6 +1,7 @@
 // CONFIG
 var Config = {
     gridName: 'inner-grid',
+    previewName: 'preview',
     size: {
         width: 10, //10 cells across
         height: 20 //20 cells down
