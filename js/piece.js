@@ -26,12 +26,14 @@ Piece.prototype.colorInCells = function(color) {
 
     for (var i=0; i<this.cells.length; i++) {
         this.cells[i].colorIn(color);
+        this.cells[i].el.classList.add('marked');
     }
 }
 
 Piece.prototype.obliviateCells = function() {
     for (var i=0; i<this.cells.length; i++) {
         this.cells[i].unMark();
+        this.cells[i].el.classList.remove('marked');
     }
 
     this.cells = [];
