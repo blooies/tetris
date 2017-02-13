@@ -2,19 +2,10 @@
 // 2: can rotate pieces and move them in different directions - cant move them when hitting grid border or on top of another piece
 // 3: when row has been filled
 // 4: points
-
+// other feats: preview of next piece, hard drop, preview of piece on bottom
 
 //before this, i apparently do not know how to play tetris.
 
-//notes to self:
-//* REFACTOR ****
-//* have preview of next piece (DONE)
-//* can configure grid size
-//* points (DONE)
-//* hard drop ****
-//* preview on bottoms
-//* nice styling (DONE)
-//* fall down bug ****
 
 // TETRIS
 var Tetris = function() {
