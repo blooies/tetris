@@ -73,9 +73,13 @@ Grid.prototype.emptyRow = function(rowIndex) {
 }
 
 Grid.prototype.emptyFilledRows = function(rows) {
-    for (var i=0; i<rows.length; i++) {
-        this.emptyRow(rows[i]);
-    }
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        for (var i=0; i<rows.length; i++) {
+            self.emptyRow(rows[i]);
+        }
+        resolve('');
+    });
 }
 
 Grid.prototype.getFilledRows = function() {
@@ -98,31 +102,57 @@ Grid.prototype.getFilledRows = function() {
     return rows;
 }
 
-//check each cell if its "marked" and move it down 
+
 Grid.prototype.moveAllCellsDown = function(filledRows) {
-    for (xIndex in this.cells) {
-        var column = this.cells[xIndex];
-        var i = Config.size.height;
-        while (i--) {
-            //get the last cell in this column;
-            var cell = column[i];
-            var y = cell['y'];
-            if (cell.defaultColor !== cell.color) {
-                var filledRowsBelowCell = 0;
-                for (var j=0; j<filledRows.length; j++) {
-                    if (y < filledRows[j]) {
-                        filledRowsBelowCell += 1;
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        for (xIndex in self.cells) {
+            var column = self.cells[xIndex];
+            var i = Config.size.height;
+            while (i--) {
+                //get the last cell in this column;
+                var cell = column[i];
+                var y = cell['y'];
+                if (cell.defaultColor !== cell.color) {
+                    var filledRowsBelowCell = 0;
+                    for (var j=0; j<filledRows.length; j++) {
+                        if (y < filledRows[j]) {
+                            filledRowsBelowCell += 1;
+                        }
                     }
-                }
-                var downCell = column[i + filledRowsBelowCell];
-                if (downCell) {
-                    downCell.colorIn(cell.color);
-                    downCell.mark();
-                    cell.unMark();
+                    var downCell = column[i + filledRowsBelowCell];
+
+                    var down = 1;
+                    function getBottomestDownCell(downCell) {
+                        var next = column[i + filledRowsBelowCell + down];
+                        if (!next || next.defaultColor !== next.color) {
+                            return downCell;
+                        }
+                        
+                        while (next && next.defaultColor == next.color && next['y'] < Config.size.height - 1) {
+                            down += 1;
+                            next = column[i + filledRowsBelowCell + down];
+                        }
+
+                        // return next;
+                        if (next.defaultColor !== next.color) {
+                            return column[i + filledRowsBelowCell + down - 1]
+                        } else {
+                            return next;
+                        }
+                    }
+
+                    if (filledRowsBelowCell !== 0 && downCell && downCell.defaultColor === downCell.color) {
+                        var bottom = getBottomestDownCell(downCell);
+                        bottom.colorIn(cell.color);
+                        bottom.mark();
+                        cell.unMark();
+                    }
                 }
             }
         }
-    }
+        resolve('');
+    });
 }
 
 Grid.prototype.checkIfCellsAreMarkedOrOutOfBoard = function(coords) {
