@@ -85,6 +85,7 @@ Tetris.prototype.showPiece = function(piece) {
     this.fallingPiece = piece;
     piece.reassignCells({cells: 'cells'});
     piece.colorInCells();
+    this.showShadow(piece);
 }
 
 Tetris.prototype.assignCellsToPiece = function(piece) {
@@ -191,29 +192,58 @@ Tetris.prototype.updateScore = function() {
     document.getElementById('score').innerHTML = this.score;
 }
 
+Tetris.prototype.removeOpacity = function(piece) {
+    for (var i=0; i<piece.cells.length; i++) {
+        piece.cells[i].el.classList.remove('highlight');
+    }
+}
+
 Tetris.prototype.movePiece = function(piece, direction) {
+    this.showShadow(piece);
+
     if (!piece) {
         piece = this.fallingPiece;
     }
-    if (piece.fallen) {
-        this.markCellsAsFilled(piece);
-        this.fallingPiece = null;
-        var filledRows = this.grid.getFilledRows();
+    
+    if (piece) {
+        if (piece.fallen) {
+            this.removeOpacity(piece);
+            this.markCellsAsFilled(piece);
+            this.fallingPiece = null;
+            var filledRows = this.grid.getFilledRows();
+            var doUpdate = updateGrid.bind(this);
+            doUpdate(filledRows);
+        } else if (piece.reachedTopOfBoard) {
+            clearInterval(timer);
+        } else {
+            this.movePieceInDirection(piece, direction);
+            this.hidePreviousShadow(piece);
+            this.showShadow(piece);
+        }
+    }
+
+    function updateGrid(filledRows) {
+        var self = this;
         if (filledRows.length > 0) {
             this.score += filledRows.length * 5;
             this.updateScore();
-            this.grid.emptyFilledRows(filledRows);
-            this.grid.moveAllCellsDown(filledRows);
+            this.grid.emptyFilledRows(filledRows).then(function() {
+                setTimeout(function() {
+                    self.grid.moveAllCellsDown(filledRows).then(function() {
+                        setTimeout(function() {
+                            rows = self.grid.getFilledRows();
+                            return updateGrid.call(self, rows);
+                        }, 500);
+                    })
+                }, 1000)
+            });
+        } else {
+            var newPiece = self.pieces.shift();
+            newPiece.cells = [];
+            self.showPiece(newPiece);
+            self.clearPreview();
+            self.showPreviewPiece();
         }
-        var newPiece = this.pieces.shift();
-        newPiece.cells = [];
-        this.showPiece(newPiece);
-        this.clearPreview();
-        this.showPreviewPiece();
-    } else if (piece.reachedTopOfBoard) {
-        clearInterval(timer);
-    } else {
-        this.movePieceInDirection(piece, direction);
     }
 }
 
