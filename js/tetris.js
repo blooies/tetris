@@ -251,6 +251,48 @@ Tetris.prototype.canShadowMoveDown= function(coords) {
     return true;
 }
 
+Tetris.prototype.hidePreviousShadow = function(piece) {
+    var color = piece ? piece.color : '';
+    for (var i=0; i<piece.shadowCoords.length; i++) {
+        var coord = piece.shadowCoords[i];
+        var cell = this.grid.getCell({
+            coordinates: coord,
+            cells: 'cells'
+        });
+        cell.removeHighlight(color);
+    }
+}
+
+Tetris.prototype.showShadow = function(piece) {
+    if (!piece) piece = this.fallingPiece;
+    if (piece) {
+        var coords = piece.currentCoordinates;
+        var canShadowMoveDown = this.canShadowMoveDown(coords);
+        var shiftedCoords = [];
+
+        while (canShadowMoveDown) {
+            shiftedCoords = [];
+            for (var i=0; i<coords.length; i++) {
+                var x = coords[i][0];
+                var y = coords[i][1];
+                shiftedCoords.push([x, y + 1]);
+            }
+            canShadowMoveDown = this.canShadowMoveDown(shiftedCoords);
+            coords = shiftedCoords;
+        }
+        for (var j=0; j<coords.length; j++) {
+            var cell = this.grid.getCell({
+                coordinates: coords[j],
+                cells: 'cells'
+            })
+
+            cell.highlight(piece.color);
+        }
+
+        piece.shadowCoords = coords;
+    }
+}
+
 Tetris.prototype.markCellsAsFilled = function(piece) {
     for (var i=0; i<piece.cells.length; i++) {
         var cell = piece.cells[i];
